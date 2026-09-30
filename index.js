@@ -1,5 +1,4 @@
-
-express = require("express");
+const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
@@ -38,20 +37,6 @@ if(!BOT_TOKEN){
     process.exit(1);
 
 }
-
-
-/*
- * IMPORTANT
- *
- * MEDIA_STORAGE_CHAT_ID নেই।
- *
- * শুধু:
- *
- * BOT_TOKEN
- * CHANNEL_ID
- *
- * ব্যবহার হবে।
- */
 
 
 /* =========================================================
@@ -757,10 +742,6 @@ async function uploadMediaToTelegram(
     }
 
 
-    /*
-     * Temporary upload message delete
-     */
-
     try{
 
         await telegram(
@@ -932,26 +913,11 @@ app.post(
             }
 
 
-            console.log(
-                "📤 Uploading " +
-                type +
-                " to Telegram..."
-            );
-
-
             const result =
                 await uploadMediaToTelegram(
                     req.file,
                     type
                 );
-
-
-            console.log(
-                "✅ " +
-                type +
-                " file_id:",
-                result.file_id
-            );
 
 
             res.json({
@@ -968,12 +934,6 @@ app.post(
 
 
         }catch(error){
-
-            console.error(
-                "❌ Upload error:",
-                error
-            );
-
 
             res
                 .status(500)
@@ -1186,12 +1146,13 @@ app.post(
 
 
 /* =========================================================
-   ADMIN HTML
+   ADMIN HTML (Updated for public folder)
 ========================================================= */
 
 const ADMIN_HTML =
     path.join(
         __dirname,
+        "public",
         "admin.html"
     );
 
@@ -1468,12 +1429,6 @@ async function getProfilePhotoFileId(
 
     }catch(error){
 
-        console.warn(
-            "⚠️ Profile photo unavailable:",
-            error.message
-        );
-
-
         return null;
 
     }
@@ -1482,7 +1437,7 @@ async function getProfilePhotoFileId(
 
 
 /* =========================================================
-   SEND EPHEMERAL TEXT
+   SEND MESSAGES
 ========================================================= */
 
 async function sendWelcomeText(
@@ -1519,10 +1474,6 @@ async function sendWelcomeText(
 
 }
 
-
-/* =========================================================
-   SEND PHOTO
-========================================================= */
 
 async function sendWelcomePhoto(
     userId,
@@ -1562,10 +1513,6 @@ async function sendWelcomePhoto(
 }
 
 
-/* =========================================================
-   SEND VIDEO
-========================================================= */
-
 async function sendWelcomeVideo(
     userId,
     source
@@ -1589,10 +1536,6 @@ async function sendWelcomeVideo(
 
 }
 
-
-/* =========================================================
-   SEND AUDIO
-========================================================= */
 
 async function sendWelcomeAudio(
     userId,
@@ -1630,10 +1573,6 @@ async function sendWelcomeAudio(
 }
 
 
-/* =========================================================
-   SEND MEDIA BUTTON MESSAGE
-========================================================= */
-
 async function sendMediaButtons(
     userId,
     keyboard
@@ -1668,18 +1607,12 @@ async function sendMediaButtons(
 }
 
 
-/* =========================================================
-   DELETE EPHEMERAL
-========================================================= */
-
 async function deleteEphemeral(
     userId,
     messageId
 ){
 
-    if(
-        !messageId
-    ){
+    if(!messageId){
 
         return;
 
@@ -1704,22 +1637,10 @@ async function deleteEphemeral(
             }
         );
 
-
-    }catch(error){
-
-        console.warn(
-            "⚠️ Ephemeral delete failed:",
-            error.message
-        );
-
-    }
+    }catch(error){}
 
 }
 
-
-/* =========================================================
-   DELETE LATER
-========================================================= */
 
 function scheduleDelete(
     userId,
@@ -1766,35 +1687,23 @@ function scheduleDelete(
 }
 
 
-/* =========================================================
-   GET VIDEO SOURCE
-========================================================= */
-
 function getVideoSource(
     settings
 ){
 
-    if(
-        settings.video_file_id
-    ){
+    if(settings.video_file_id){
 
         return settings.video_file_id;
 
     }
 
 
-    if(
-        settings.video_url
-    ){
+    if(settings.video_url){
 
         return settings.video_url;
 
     }
 
-
-    /*
-     * Legacy support
-     */
 
     if(
         settings.media_type ===
@@ -1812,35 +1721,23 @@ function getVideoSource(
 }
 
 
-/* =========================================================
-   GET AUDIO SOURCE
-========================================================= */
-
 function getAudioSource(
     settings
 ){
 
-    if(
-        settings.audio_file_id
-    ){
+    if(settings.audio_file_id){
 
         return settings.audio_file_id;
 
     }
 
 
-    if(
-        settings.audio_url
-    ){
+    if(settings.audio_url){
 
         return settings.audio_url;
 
     }
 
-
-    /*
-     * Legacy support
-     */
 
     if(
         settings.media_type ===
@@ -1858,10 +1755,6 @@ function getAudioSource(
 }
 
 
-/* =========================================================
-   SEND COMPLETE WELCOME
-========================================================= */
-
 async function sendWelcome(
     user
 ){
@@ -1870,13 +1763,7 @@ async function sendWelcome(
         loadSettings();
 
 
-    if(
-        !settings.welcome_enabled
-    ){
-
-        console.log(
-            "ℹ️ Welcome disabled"
-        );
+    if(!settings.welcome_enabled){
 
         return;
 
@@ -1887,9 +1774,7 @@ async function sendWelcome(
         Number(user.id);
 
 
-    if(
-        !userId
-    ){
+    if(!userId){
 
         return;
 
@@ -1916,42 +1801,6 @@ async function sendWelcome(
 
 
     const sent = [];
-
-
-    console.log(
-        "===================================="
-    );
-
-    console.log(
-        "🎉 NEW MEMBER:",
-        userId,
-        user.first_name
-    );
-
-    console.log(
-        "📦 VIDEO:",
-        Boolean(
-            getVideoSource(
-                settings
-            )
-        )
-    );
-
-    console.log(
-        "📦 AUDIO:",
-        Boolean(
-            getAudioSource(
-                settings
-            )
-        )
-    );
-
-
-    /*
-     * =====================================================
-     * 1. WELCOME + PROFILE PHOTO
-     * =====================================================
-     */
 
     let welcomeMessage =
         null;
@@ -1984,35 +1833,14 @@ async function sendWelcome(
 
                     );
 
-
-                console.log(
-                    "✅ WELCOME PHOTO SENT:",
-                    welcomeMessage
-                        .ephemeral_message_id
-                );
-
-
-            }catch(error){
-
-                console.warn(
-                    "⚠️ Photo send failed, text fallback:",
-                    error.message
-                );
-
-            }
+            }catch(error){}
 
         }
 
     }
 
 
-    /*
-     * Photo unavailable হলে text
-     */
-
-    if(
-        !welcomeMessage
-    ){
+    if(!welcomeMessage){
 
         try{
 
@@ -2027,20 +1855,7 @@ async function sendWelcome(
 
                 );
 
-
-            console.log(
-                "✅ WELCOME TEXT SENT:",
-                welcomeMessage
-                    .ephemeral_message_id
-            );
-
-
         }catch(error){
-
-            console.error(
-                "❌ WELCOME SEND FAILED:",
-                error.message
-            );
 
             return;
 
@@ -2054,12 +1869,6 @@ async function sendWelcome(
     );
 
 
-    /*
-     * =====================================================
-     * 2. VIDEO
-     * =====================================================
-     */
-
     const videoSource =
         getVideoSource(
             settings
@@ -2069,11 +1878,6 @@ async function sendWelcome(
     if(videoSource){
 
         try{
-
-            console.log(
-                "🎬 SENDING VIDEO..."
-            );
-
 
             const videoMessage =
                 await sendWelcomeVideo(
@@ -2089,31 +1893,10 @@ async function sendWelcome(
                 videoMessage
             );
 
-
-            console.log(
-                "✅ VIDEO SENT:",
-                videoMessage
-                    .ephemeral_message_id
-            );
-
-
-        }catch(error){
-
-            console.error(
-                "❌ VIDEO SEND FAILED:",
-                error.message
-            );
-
-        }
+        }catch(error){}
 
     }
 
-
-    /*
-     * =====================================================
-     * 3. AUDIO
-     * =====================================================
-     */
 
     const audioSource =
         getAudioSource(
@@ -2124,11 +1907,6 @@ async function sendWelcome(
     if(audioSource){
 
         try{
-
-            console.log(
-                "🎵 SENDING AUDIO..."
-            );
-
 
             const audioMessage =
                 await sendWelcomeAudio(
@@ -2146,40 +1924,10 @@ async function sendWelcome(
                 audioMessage
             );
 
-
-            console.log(
-                "✅ AUDIO SENT:",
-                audioMessage
-                    .ephemeral_message_id
-            );
-
-
-        }catch(error){
-
-            console.error(
-                "❌ AUDIO SEND FAILED:",
-                error.message
-            );
-
-        }
+        }catch(error){}
 
     }
 
-
-    /*
-     * =====================================================
-     * 4. MEDIA BUTTONS
-     *
-     * Video + Audio:
-     * Audio-এর পরে
-     *
-     * Only Video:
-     * Video-এর পরে
-     *
-     * Only Audio:
-     * Audio-এর পরে
-     * =====================================================
-     */
 
     if(mediaButtons){
 
@@ -2199,31 +1947,10 @@ async function sendWelcome(
                 mediaButtonMessage
             );
 
-
-            console.log(
-                "✅ MEDIA BUTTONS SENT:",
-                mediaButtonMessage
-                    .ephemeral_message_id
-            );
-
-
-        }catch(error){
-
-            console.error(
-                "❌ MEDIA BUTTON SEND FAILED:",
-                error.message
-            );
-
-        }
+        }catch(error){}
 
     }
 
-
-    /*
-     * =====================================================
-     * 5. AUTO DELETE
-     * =====================================================
-     */
 
     scheduleDelete(
 
@@ -2233,17 +1960,6 @@ async function sendWelcome(
 
         settings.duration
 
-    );
-
-
-    console.log(
-        "⏱ AUTO DELETE:",
-        settings.duration,
-        "seconds"
-    );
-
-    console.log(
-        "===================================="
     );
 
 }
@@ -2342,10 +2058,7 @@ app.get(
             bot:true,
 
             channel_id:
-                CHANNEL_ID,
-
-            media_storage:
-                false
+                CHANNEL_ID
 
         });
 
@@ -2366,24 +2079,6 @@ let offset =
 
 async function startPolling(){
 
-    console.log(
-        "🤖 Telegram polling started"
-    );
-
-    console.log(
-        "📢 CHANNEL_ID:",
-        CHANNEL_ID
-    );
-
-    console.log(
-        "📦 MEDIA STORAGE: DISABLED"
-    );
-
-
-    /*
-     * Long polling শুরু করার আগে webhook remove
-     */
-
     try{
 
         await telegram(
@@ -2393,15 +2088,7 @@ async function startPolling(){
             }
         );
 
-
-    }catch(error){
-
-        console.error(
-            "❌ deleteWebhook:",
-            error.message
-        );
-
-    }
+    }catch(error){}
 
 
     while(polling){
@@ -2444,12 +2131,6 @@ async function startPolling(){
                     update.update_id + 1;
 
 
-                /*
-                 * =========================================
-                 * CHAT MEMBER
-                 * =========================================
-                 */
-
                 if(
                     update.chat_member
                 ){
@@ -2477,18 +2158,6 @@ async function startPolling(){
                         cm.new_chat_member &&
                         cm.new_chat_member.status;
 
-
-                    console.log(
-                        "👤 MEMBER UPDATE:",
-                        oldStatus,
-                        "→",
-                        newStatus
-                    );
-
-
-                    /*
-                     * left/kicked → member
-                     */
 
                     if(
 
@@ -2534,12 +2203,6 @@ async function startPolling(){
                 }
 
 
-                /*
-                 * =========================================
-                 * COMMAND
-                 * =========================================
-                 */
-
                 if(
                     update.message
                 ){
@@ -2553,15 +2216,8 @@ async function startPolling(){
                             "/welcome_test"
                     ){
 
-                        console.log(
-                            "🧪 /welcome_test"
-                        );
-
-
                         await sendWelcome(
-
                             message.from
-
                         );
 
                     }
@@ -2572,12 +2228,6 @@ async function startPolling(){
 
 
         }catch(error){
-
-            console.error(
-                "❌ Polling error:",
-                error.message
-            );
-
 
             await new Promise(
                 resolve =>
@@ -2603,39 +2253,9 @@ app.listen(
     function(){
 
         console.log(
-            "===================================="
-        );
-
-        console.log(
-            "🚀 SOHEL VAI SYSTEM STARTED"
-        );
-
-        console.log(
-            "🌐 PORT:",
+            "🚀 SOHEL VAI SYSTEM STARTED ON PORT:",
             PORT
         );
-
-        console.log(
-            "📢 CHANNEL:",
-            CHANNEL_ID
-        );
-
-        console.log(
-            "📦 MEDIA STORAGE: OFF"
-        );
-
-        console.log(
-            "🛡 ADMIN API: ON"
-        );
-
-        console.log(
-            "🤖 BOT: ON"
-        );
-
-        console.log(
-            "===================================="
-        );
-
 
         startPolling();
 
