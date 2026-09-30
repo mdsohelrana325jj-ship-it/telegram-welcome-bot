@@ -900,7 +900,6 @@ app.post(
                 );
 
 
-            // সরাসরি settings এ file_id এবং filename সেভ করে দেওয়া হলো
             const settings = loadSettings();
 
             if (type === "video") {
@@ -1551,64 +1550,6 @@ async function sendWelcomeAudio(
 }
 
 
-    const videoSource =
-        getVideoSource(
-            settings
-        );
-
-
-    if(videoSource){
-
-        try{
-
-            const videoMessage =
-                await sendWelcomeVideo(
-
-                    videoSource,
-                    mediaButtons // ভিডিওর নিচে বাটনগুলো যুক্ত করে দেওয়া হলো
-
-                );
-
-
-            sent.push(
-                videoMessage
-            );
-
-        }catch(error){}
-
-    }
-
-
-    const audioSource =
-        getAudioSource(
-            settings
-        );
-
-
-    if(audioSource){
-
-        try{
-
-            const audioMessage =
-                await sendWelcomeAudio(
-
-                    audioSource,
-
-                    settings.voice_text,
-                    !videoSource ? mediaButtons : undefined // যদি ভিডিও না থাকে তবে অডিওর নিচে বাটন দেখাবে
-
-                );
-
-
-            sent.push(
-                audioMessage
-            );
-
-        }catch(error){}
-
-    }
-
-
 async function deleteMessage(
     messageId
 ){
@@ -1854,7 +1795,7 @@ async function sendWelcome(
                 await sendWelcomeVideo(
 
                     videoSource,
-                    mediaButtons // ভিডিওর সাথেই নিচেই বাটনগুলো যুক্ত করা হলো
+                    mediaButtons
 
                 );
 
@@ -1884,7 +1825,7 @@ async function sendWelcome(
                     audioSource,
 
                     settings.voice_text,
-                    !videoSource ? mediaButtons : undefined // যদি ভিডিও না থাকে তবে অডিওর নিচে বাটন দেখাবে
+                    !videoSource ? mediaButtons : undefined
 
                 );
 
