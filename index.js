@@ -1,5 +1,3 @@
-
-
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
@@ -840,9 +838,8 @@ app.post(
     }
 );
 
-
 /* =========================================================
-   MEDIA UPLOAD API
+   MEDIA UPLOAD API (Updated)
 ========================================================= */
 
 app.post(
@@ -903,6 +900,20 @@ app.post(
                 );
 
 
+            // সরাসরি settings এ file_id এবং filename সেভ করে দেওয়া হলো
+            const settings = loadSettings();
+
+            if (type === "video") {
+                settings.video_file_id = result.file_id;
+                settings.video_filename = result.filename;
+            } else if (type === "audio") {
+                settings.audio_file_id = result.file_id;
+                settings.audio_filename = result.filename;
+            }
+
+            const savedSettings = saveSettings(settings);
+
+
             res.json({
 
                 ok:true,
@@ -911,7 +922,10 @@ app.post(
                     result.file_id,
 
                 filename:
-                    result.filename
+                    result.filename,
+
+                settings:
+                    savedSettings
 
             });
 
@@ -933,7 +947,6 @@ app.post(
 
     }
 );
-
 
 /* =========================================================
    REMOVE MEDIA
