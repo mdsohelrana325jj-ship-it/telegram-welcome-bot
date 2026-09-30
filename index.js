@@ -1488,20 +1488,27 @@ async function sendWelcomePhoto(
 
 
 async function sendWelcomeVideo(
-    source
+    source,
+    keyboard
 ){
+
+    const body = {
+
+        chat_id:
+            CHANNEL_ID,
+
+        video:
+            source
+
+    };
+
+    if(keyboard){
+        body.reply_markup = keyboard;
+    }
 
     return telegram(
         "sendVideo",
-        {
-
-            chat_id:
-                CHANNEL_ID,
-
-            video:
-                source
-
-        }
+        body
     );
 
 }
@@ -1509,7 +1516,8 @@ async function sendWelcomeVideo(
 
 async function sendWelcomeAudio(
     source,
-    caption
+    caption,
+    keyboard
 ){
 
     const body = {
@@ -1530,6 +1538,10 @@ async function sendWelcomeAudio(
 
     }
 
+    if(keyboard){
+        body.reply_markup = keyboard;
+    }
+
 
     return telegram(
         "sendAudio",
@@ -1539,34 +1551,62 @@ async function sendWelcomeAudio(
 }
 
 
-async function sendMediaButtons(
-    keyboard
-){
+    const videoSource =
+        getVideoSource(
+            settings
+        );
 
-    if(!keyboard){
 
-        return null;
+    if(videoSource){
+
+        try{
+
+            const videoMessage =
+                await sendWelcomeVideo(
+
+                    videoSource,
+                    mediaButtons // ভিডিওর নিচে বাটনগুলো যুক্ত করে দেওয়া হলো
+
+                );
+
+
+            sent.push(
+                videoMessage
+            );
+
+        }catch(error){}
 
     }
 
 
-    return telegram(
-        "sendMessage",
-        {
+    const audioSource =
+        getAudioSource(
+            settings
+        );
 
-            chat_id:
-                CHANNEL_ID,
 
-            text:
-                "👇 নিচের অপশন থেকে নির্বাচন করুন:",
+    if(audioSource){
 
-            reply_markup:
-                keyboard
+        try{
 
-        }
-    );
+            const audioMessage =
+                await sendWelcomeAudio(
 
-}
+                    audioSource,
+
+                    settings.voice_text,
+                    !videoSource ? mediaButtons : undefined // যদি ভিডিও না থাকে তবে অডিওর নিচে বাটন দেখাবে
+
+                );
+
+
+            sent.push(
+                audioMessage
+            );
+
+        }catch(error){}
+
+    }
 
 
 async function deleteMessage(
@@ -1813,7 +1853,8 @@ async function sendWelcome(
             const videoMessage =
                 await sendWelcomeVideo(
 
-                    videoSource
+                    videoSource,
+                    mediaButtons // ভিডিওর সাথেই নিচেই বাটনগুলো যুক্ত করা হলো
 
                 );
 
@@ -1842,34 +1883,14 @@ async function sendWelcome(
 
                     audioSource,
 
-                    settings.voice_text
+                    settings.voice_text,
+                    !videoSource ? mediaButtons : undefined // যদি ভিডিও না থাকে তবে অডিওর নিচে বাটন দেখাবে
 
                 );
 
 
             sent.push(
                 audioMessage
-            );
-
-        }catch(error){}
-
-    }
-
-
-    if(mediaButtons){
-
-        try{
-
-            const mediaButtonMessage =
-                await sendMediaButtons(
-
-                    mediaButtons
-
-                );
-
-
-            sent.push(
-                mediaButtonMessage
             );
 
         }catch(error){}
