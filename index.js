@@ -172,7 +172,7 @@ const DEFAULT_SETTINGS = {
         {
             enabled:true,
             text:
-                "😈 𝗔𝗜 𝗛𝗔𝗖𝗞 𝐋𝐈𝐍𝐊 𝐎𝐏𝐄𝐍 😈",
+                "😈 𝗔𝗜 HACK 𝐋𝐈𝐍𝐊 𝐎𝐏𝐄𝐍 😈",
             url:
                 "https://t.me/sohel_ai_prediction_bot"
         },
@@ -370,12 +370,6 @@ function loadSettings(){
 
 
     }catch(error){
-
-        console.error(
-            "❌ Settings load error:",
-            error.message
-        );
-
 
         return clone(
             DEFAULT_SETTINGS
@@ -757,14 +751,7 @@ async function uploadMediaToTelegram(
             }
         );
 
-    }catch(error){
-
-        console.warn(
-            "⚠️ Temporary media message delete failed:",
-            error.message
-        );
-
-    }
+    }catch(error){}
 
 
     return {
@@ -834,12 +821,6 @@ app.post(
 
 
         }catch(error){
-
-            console.error(
-                "Settings save error:",
-                error
-            );
-
 
             res
                 .status(500)
@@ -1146,7 +1127,7 @@ app.post(
 
 
 /* =========================================================
-   ADMIN HTML (Updated for public folder)
+   ADMIN HTML
 ========================================================= */
 
 const ADMIN_HTML =
@@ -1357,20 +1338,6 @@ function replaceText(
 }
 
 
-function ephemeral(
-    userId
-){
-
-    return {
-
-        receiver_user_id:
-            Number(userId)
-
-    };
-
-}
-
-
 /* =========================================================
    PROFILE PHOTO
 ========================================================= */
@@ -1437,11 +1404,10 @@ async function getProfilePhotoFileId(
 
 
 /* =========================================================
-   SEND MESSAGES
+   SEND MESSAGES (CHANNEL FRIENDLY)
 ========================================================= */
 
 async function sendWelcomeText(
-    userId,
     text,
     keyboard
 ){
@@ -1451,10 +1417,7 @@ async function sendWelcomeText(
         chat_id:
             CHANNEL_ID,
 
-        text,
-
-        ephemeral_message_parameters:
-            ephemeral(userId)
+        text
 
     };
 
@@ -1476,7 +1439,6 @@ async function sendWelcomeText(
 
 
 async function sendWelcomePhoto(
-    userId,
     photo,
     caption,
     keyboard
@@ -1489,10 +1451,7 @@ async function sendWelcomePhoto(
 
         photo,
 
-        caption,
-
-        ephemeral_message_parameters:
-            ephemeral(userId)
+        caption
 
     };
 
@@ -1514,7 +1473,6 @@ async function sendWelcomePhoto(
 
 
 async function sendWelcomeVideo(
-    userId,
     source
 ){
 
@@ -1526,10 +1484,7 @@ async function sendWelcomeVideo(
                 CHANNEL_ID,
 
             video:
-                source,
-
-            ephemeral_message_parameters:
-                ephemeral(userId)
+                source
 
         }
     );
@@ -1538,7 +1493,6 @@ async function sendWelcomeVideo(
 
 
 async function sendWelcomeAudio(
-    userId,
     source,
     caption
 ){
@@ -1549,10 +1503,7 @@ async function sendWelcomeAudio(
             CHANNEL_ID,
 
         audio:
-            source,
-
-        ephemeral_message_parameters:
-            ephemeral(userId)
+            source
 
     };
 
@@ -1574,7 +1525,6 @@ async function sendWelcomeAudio(
 
 
 async function sendMediaButtons(
-    userId,
     keyboard
 ){
 
@@ -1596,10 +1546,7 @@ async function sendMediaButtons(
                 "👇 নিচের অপশন থেকে নির্বাচন করুন:",
 
             reply_markup:
-                keyboard,
-
-            ephemeral_message_parameters:
-                ephemeral(userId)
+                keyboard
 
         }
     );
@@ -1607,8 +1554,7 @@ async function sendMediaButtons(
 }
 
 
-async function deleteEphemeral(
-    userId,
+async function deleteMessage(
     messageId
 ){
 
@@ -1622,16 +1568,13 @@ async function deleteEphemeral(
     try{
 
         await telegram(
-            "deleteEphemeralMessage",
+            "deleteMessage",
             {
 
                 chat_id:
                     CHANNEL_ID,
 
-                receiver_user_id:
-                    Number(userId),
-
-                ephemeral_message_id:
+                message_id:
                     Number(messageId)
 
             }
@@ -1643,7 +1586,6 @@ async function deleteEphemeral(
 
 
 function scheduleDelete(
-    userId,
     messages,
     seconds
 ){
@@ -1653,7 +1595,8 @@ function scheduleDelete(
             .filter(Boolean)
             .map(
                 message =>
-                    message.ephemeral_message_id
+                    message &&
+                    message.message_id
             )
             .filter(Boolean);
 
@@ -1673,8 +1616,7 @@ function scheduleDelete(
                 of ids
             ){
 
-                await deleteEphemeral(
-                    userId,
+                await deleteMessage(
                     id
                 );
 
@@ -1705,17 +1647,6 @@ function getVideoSource(
     }
 
 
-    if(
-        settings.media_type ===
-            "video" &&
-        settings.media_file_id
-    ){
-
-        return settings.media_file_id;
-
-    }
-
-
     return "";
 
 }
@@ -1735,17 +1666,6 @@ function getAudioSource(
     if(settings.audio_url){
 
         return settings.audio_url;
-
-    }
-
-
-    if(
-        settings.media_type ===
-            "audio" &&
-        settings.media_file_id
-    ){
-
-        return settings.media_file_id;
 
     }
 
@@ -1823,8 +1743,6 @@ async function sendWelcome(
                 welcomeMessage =
                     await sendWelcomePhoto(
 
-                        userId,
-
                         photoId,
 
                         text,
@@ -1846,8 +1764,6 @@ async function sendWelcome(
 
             welcomeMessage =
                 await sendWelcomeText(
-
-                    userId,
 
                     text,
 
@@ -1882,8 +1798,6 @@ async function sendWelcome(
             const videoMessage =
                 await sendWelcomeVideo(
 
-                    userId,
-
                     videoSource
 
                 );
@@ -1911,8 +1825,6 @@ async function sendWelcome(
             const audioMessage =
                 await sendWelcomeAudio(
 
-                    userId,
-
                     audioSource,
 
                     settings.voice_text
@@ -1936,8 +1848,6 @@ async function sendWelcome(
             const mediaButtonMessage =
                 await sendMediaButtons(
 
-                    userId,
-
                     mediaButtons
 
                 );
@@ -1953,8 +1863,6 @@ async function sendWelcome(
 
 
     scheduleDelete(
-
-        userId,
 
         sent,
 
