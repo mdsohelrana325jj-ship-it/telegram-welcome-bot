@@ -358,20 +358,35 @@ and
 </div>
 
 
-<label>Text Size</label>
+<label>Text Style / Format</label>
 
 <select id="ws">
 
-<option value="small">
-Small
+<option value="normal">
+Normal Text
 </option>
 
-<option value="medium">
-Medium
+<option value="bold">
+Bold Text (HTML)
 </option>
 
-<option value="large">
-Large
+<option value="code">
+Code Format (<pre>)
+</option>
+
+</select>
+
+
+<label>Message Order (সিরিজ)</label>
+
+<select id="mo">
+
+<option value="welcome_first">
+Welcome Message First (প্রথমে ওয়েলকাম, পরে মিডিয়া)
+</option>
+
+<option value="media_first">
+Media First (প্রথমে ভিডিও/অডিও, পরে ওয়েলকাম)
 </option>
 
 </select>
@@ -743,6 +758,8 @@ const DEFAULT_SETTINGS = {
 
     profile_photo_enabled:true,
 
+    message_order: "welcome_first",
+
     channel_title:
         "SOHEL VAI OFFICIAL CHANNEL",
 
@@ -752,7 +769,7 @@ const DEFAULT_SETTINGS = {
 🎉 আপনাকে স্বাগতম!
 👑 SOHEL VAI OFFICIAL CHANNEL JOIN করার জন্য 💖
 
-❤️ আসসালামু আলাইকুম প্রিয় ভাই ❤️️
+❤️ আসসালামু আলাইকুম প্রিয় ভাই ❤
 আমাদের Official Channel-এ Join করার জন্য আপনাকে আন্তরিক ধন্যবাদ।
 
 প্রিয় ভাই আমাদের সাথেই থাকুন আশা করি কোন না কোন একদিন অবশ্যই আপনার উপকারে আসবোই ইনশাআল্লাহ 🥰
@@ -760,7 +777,7 @@ const DEFAULT_SETTINGS = {
 📢 নিয়মিত নতুন Update পেতে আমাদের সাথে থাকুন।🫶😘
 👑 — SOHEL VAI — 👑`,
 
-    welcome_text_size:"medium",
+    welcome_text_size:"bold",
 
     duration:30,
 
@@ -825,7 +842,7 @@ const DEFAULT_SETTINGS = {
         {
             enabled:true,
             text:
-                "🟡 𝐃𝐊𝐖𝐈𝐍 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗝𝗎𝗈𝗜𝗡🎰",
+                "🟡 𝐃𝐊𝐖𝐈𝗡 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗝𝗎𝗈𝗜𝗡🎰",
             url:
                 "https://t.me/EARNING_TEME_bd"
         }
@@ -1101,7 +1118,12 @@ function loadSettingsIntoPanel(){
 
     document.getElementById("ws").value =
         SETTINGS.welcome_text_size ||
-        "medium";
+        "bold";
+
+
+    document.getElementById("mo").value =
+        SETTINGS.message_order ||
+        "welcome_first";
 
 
     document.getElementById("dur").value =
@@ -1274,6 +1296,10 @@ function collectBasic(){
 
     SETTINGS.welcome_text_size =
         document.getElementById("ws").value;
+
+
+    SETTINGS.message_order =
+        document.getElementById("mo").value;
 
 
     SETTINGS.video_url =
