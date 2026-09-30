@@ -1,0 +1,2672 @@
+const express = require("express");
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
+
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const BOT_TOKEN =
+    process.env.BOT_TOKEN;
+
+const CHANNEL_ID =
+    Number(
+        process.env.CHANNEL_ID ||
+        "-1003985236266"
+    );
+
+const PORT =
+    Number(
+        process.env.PORT ||
+        10000
+    );
+
+const DEFAULT_PASSWORD =
+    process.env.ADMIN_DEFAULT_PASSWORD ||
+    "SOHEL@12345";
+
+
+if(!BOT_TOKEN){
+
+    console.error(
+        "❌ BOT_TOKEN missing"
+    );
+
+    process.exit(1);
+
+}
+
+
+/*
+ * IMPORTANT
+ *
+ * MEDIA_STORAGE_CHAT_ID নেই।
+ *
+ * শুধু:
+ *
+ * BOT_TOKEN
+ * CHANNEL_ID
+ *
+ * ব্যবহার হবে।
+ */
+
+
+/* =========================================================
+   EXPRESS
+========================================================= */
+
+const app =
+    express();
+
+
+app.use(
+    express.json({
+        limit:"2mb"
+    })
+);
+
+
+const upload =
+    multer({
+
+        storage:
+            multer.memoryStorage(),
+
+        limits:{
+            fileSize:
+                50 * 1024 * 1024
+        }
+
+    });
+
+
+/* =========================================================
+   DATA
+========================================================= */
+
+const DATA_DIR =
+    path.join(
+        __dirname,
+        "data"
+    );
+
+
+const SETTINGS_FILE =
+    path.join(
+        DATA_DIR,
+        "settings.json"
+    );
+
+
+const PASSWORD_FILE =
+    path.join(
+        DATA_DIR,
+        "admin-password.json"
+    );
+
+
+if(
+    !fs.existsSync(DATA_DIR)
+){
+
+    fs.mkdirSync(
+        DATA_DIR,
+        {
+            recursive:true
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DEFAULT SETTINGS
+========================================================= */
+
+const DEFAULT_SETTINGS = {
+
+    welcome_enabled:true,
+
+    profile_photo_enabled:true,
+
+    channel_title:
+        "SOHEL VAI OFFICIAL CHANNEL",
+
+    welcome_text:
+`👋 👤 {first_name} ⸙ 🇧🇩
+
+🎉 আপনাকে স্বাগতম!
+👑 SOHEL VAI OFFICIAL CHANNEL JOIN করার জন্য 💖
+
+❤️ আসসালামু আলাইকুম প্রিয় ভাই ❤️
+আমাদের Official Channel-এ Join করার জন্য আপনাকে আন্তরিক ধন্যবাদ।
+
+প্রিয় ভাই আমাদের সাথেই থাকুন আশা করি কোন না কোন একদিন অবশ্যই আপনার উপকারে আসবোই ইনশাআল্লাহ 🥰
+
+📢 নিয়মিত নতুন Update পেতে আমাদের সাথে থাকুন।🫶😘
+👑 — SOHEL VAI — 👑`,
+
+    welcome_text_size:
+        "medium",
+
+    duration:30,
+
+    duration_seconds:30,
+
+    video_file_id:"",
+
+    video_filename:"",
+
+    video_url:"",
+
+    audio_file_id:"",
+
+    audio_filename:"",
+
+    audio_url:"",
+
+    voice_text:
+        "🎶 গুরুত্বপূর্ণ ভয়েস শুনুন 🎵🎵",
+
+    voice_button_text:
+        "🎶🎶 𝗢𝗣𝗘𝗡 𝗩𝗢𝗜𝗖𝗘 🎵🎵",
+
+    main_buttons:[
+
+        {
+            enabled:true,
+            text:
+                "👑 𝗩𝗜𝗣 𝗚𝗥𝗢𝗨𝗣 𝗙𝗔𝗦𝗧 𝗝𝗢𝗜𝗡 👑",
+            url:
+                "https://t.me/+WZR7nsATt1szNmRh"
+        },
+
+        {
+            enabled:true,
+            text:
+                "😈 𝗔𝗜 𝗛𝗔𝗖𝗞 𝐋𝐈𝐍𝐊 𝐎𝐏𝐄𝐍 😈",
+            url:
+                "https://t.me/sohel_ai_prediction_bot"
+        },
+
+        {
+            enabled:true,
+            text:
+                "💬 𝗦𝗨𝗣𝗣𝗢𝗥𝗧 𝗔𝗗𝗠𝗜𝗡 ☎️",
+            url:
+                "https://t.me/TRADER_SOHEL_BDT_TOP"
+        }
+
+    ],
+
+    video_buttons:[
+
+        {
+            enabled:true,
+            text:
+                "🔵 𝗕𝗗𝗪𝗜𝗡𝟮𝟰 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗝𝗢𝗜𝗡🎰",
+            url:
+                "https://t.me/+gNZZwOIN72BjYzQ1"
+        },
+
+        {
+            enabled:true,
+            text:
+                "🟡 𝐃𝐊𝐖𝐈𝐍 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗧𝗡𝗘𝗟 𝗝𝗎𝗈𝗜𝗡🎰",
+            url:
+                "https://t.me/EARNING_TEME_bd"
+        }
+
+    ]
+
+};
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function clone(obj){
+
+    return JSON.parse(
+        JSON.stringify(obj)
+    );
+
+}
+
+
+function normalizeSettings(
+    value
+){
+
+    const source =
+        value &&
+        typeof value === "object"
+            ? value
+            : {};
+
+
+    const settings = {
+
+        ...clone(
+            DEFAULT_SETTINGS
+        ),
+
+        ...source
+
+    };
+
+
+    settings.main_buttons =
+        Array.isArray(
+            settings.main_buttons
+        )
+        ? settings.main_buttons
+            .slice(0,3)
+        : clone(
+            DEFAULT_SETTINGS.main_buttons
+        );
+
+
+    settings.video_buttons =
+        Array.isArray(
+            settings.video_buttons
+        )
+        ? settings.video_buttons
+            .slice(0,2)
+        : clone(
+            DEFAULT_SETTINGS.video_buttons
+        );
+
+
+    while(
+        settings.main_buttons.length < 3
+    ){
+
+        settings.main_buttons.push({
+
+            enabled:false,
+            text:"",
+            url:""
+
+        });
+
+    }
+
+
+    while(
+        settings.video_buttons.length < 2
+    ){
+
+        settings.video_buttons.push({
+
+            enabled:false,
+            text:"",
+            url:""
+
+        });
+
+    }
+
+
+    let duration =
+        Number(
+            settings.duration ||
+            settings.duration_seconds ||
+            30
+        );
+
+
+    if(
+        !Number.isFinite(duration)
+    ){
+
+        duration = 30;
+
+    }
+
+
+    duration =
+        Math.max(
+            30,
+            Math.min(
+                900,
+                duration
+            )
+        );
+
+
+    settings.duration =
+        duration;
+
+    settings.duration_seconds =
+        duration;
+
+
+    return settings;
+
+}
+
+
+function loadSettings(){
+
+    try{
+
+        if(
+            !fs.existsSync(
+                SETTINGS_FILE
+            )
+        ){
+
+            saveSettings(
+                DEFAULT_SETTINGS
+            );
+
+            return clone(
+                DEFAULT_SETTINGS
+            );
+
+        }
+
+
+        const raw =
+            fs.readFileSync(
+                SETTINGS_FILE,
+                "utf8"
+            );
+
+
+        return normalizeSettings(
+            JSON.parse(raw)
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "❌ Settings load error:",
+            error.message
+        );
+
+
+        return clone(
+            DEFAULT_SETTINGS
+        );
+
+    }
+
+}
+
+
+function saveSettings(
+    value
+){
+
+    const settings =
+        normalizeSettings(
+            value
+        );
+
+
+    fs.writeFileSync(
+
+        SETTINGS_FILE,
+
+        JSON.stringify(
+            settings,
+            null,
+            2
+        ),
+
+        "utf8"
+
+    );
+
+
+    return settings;
+
+}
+
+
+/* =========================================================
+   PASSWORD
+========================================================= */
+
+function loadPassword(){
+
+    try{
+
+        if(
+            !fs.existsSync(
+                PASSWORD_FILE
+            )
+        ){
+
+            fs.writeFileSync(
+
+                PASSWORD_FILE,
+
+                JSON.stringify({
+
+                    password:
+                        DEFAULT_PASSWORD
+
+                }),
+
+                "utf8"
+
+            );
+
+
+            return DEFAULT_PASSWORD;
+
+        }
+
+
+        const data =
+            JSON.parse(
+                fs.readFileSync(
+                    PASSWORD_FILE,
+                    "utf8"
+                )
+            );
+
+
+        return (
+            data.password ||
+            DEFAULT_PASSWORD
+        );
+
+
+    }catch(error){
+
+        return DEFAULT_PASSWORD;
+
+    }
+
+}
+
+
+function savePassword(
+    password
+){
+
+    fs.writeFileSync(
+
+        PASSWORD_FILE,
+
+        JSON.stringify({
+
+            password
+
+        }),
+
+        "utf8"
+
+    );
+
+}
+
+
+/* =========================================================
+   ADMIN AUTH
+========================================================= */
+
+function checkAdmin(
+    req,
+    res,
+    next
+){
+
+    const password =
+        String(
+            req.headers[
+                "x-admin-password"
+            ] ||
+            ""
+        );
+
+
+    if(
+        password !==
+        loadPassword()
+    ){
+
+        return res
+            .status(401)
+            .json({
+
+                ok:false,
+
+                error:
+                    "Invalid admin password"
+
+            });
+
+    }
+
+
+    next();
+
+}
+
+
+/* =========================================================
+   TELEGRAM API
+========================================================= */
+
+const TELEGRAM_API =
+    "https://api.telegram.org/bot" +
+    BOT_TOKEN;
+
+
+async function telegram(
+    method,
+    body
+){
+
+    const response =
+        await fetch(
+            TELEGRAM_API +
+            "/" +
+            method,
+            {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(
+                        body
+                    )
+
+            }
+        );
+
+
+    const data =
+        await response
+            .json()
+            .catch(
+                ()=>({})
+            );
+
+
+    if(
+        !response.ok ||
+        !data.ok
+    ){
+
+        throw new Error(
+
+            data.description ||
+            "Telegram API error"
+
+        );
+
+    }
+
+
+    return data.result;
+
+}
+
+
+/* =========================================================
+   TELEGRAM MULTIPART UPLOAD
+========================================================= */
+
+async function uploadMediaToTelegram(
+    file,
+    type
+){
+
+    if(
+        !file ||
+        !file.buffer
+    ){
+
+        throw new Error(
+            "File missing"
+        );
+
+    }
+
+
+    const form =
+        new FormData();
+
+
+    form.append(
+        "chat_id",
+        String(CHANNEL_ID)
+    );
+
+
+    const blob =
+        new Blob(
+            [
+                file.buffer
+            ],
+            {
+                type:
+                    file.mimetype ||
+                    "application/octet-stream"
+            }
+        );
+
+
+    form.append(
+        type === "video"
+            ? "video"
+            : "audio",
+        blob,
+        file.originalname
+    );
+
+
+    form.append(
+        "disable_notification",
+        "true"
+    );
+
+
+    const response =
+        await fetch(
+
+            TELEGRAM_API +
+            (
+                type === "video"
+                    ? "/sendVideo"
+                    : "/sendAudio"
+            ),
+
+            {
+
+                method:"POST",
+
+                body:form
+
+            }
+
+        );
+
+
+    const data =
+        await response
+            .json()
+            .catch(
+                ()=>({})
+            );
+
+
+    if(
+        !response.ok ||
+        !data.ok
+    ){
+
+        throw new Error(
+
+            data.description ||
+            "Telegram media upload failed"
+
+        );
+
+    }
+
+
+    const message =
+        data.result;
+
+
+    let fileId = "";
+
+
+    if(
+        type === "video"
+    ){
+
+        fileId =
+            message &&
+            message.video &&
+            message.video.file_id;
+
+    }else{
+
+        fileId =
+            message &&
+            message.audio &&
+            message.audio.file_id;
+
+    }
+
+
+    if(!fileId){
+
+        throw new Error(
+            "Telegram file_id পাওয়া যায়নি"
+        );
+
+    }
+
+
+    /*
+     * Temporary upload message delete
+     */
+
+    try{
+
+        await telegram(
+            "deleteMessage",
+            {
+
+                chat_id:
+                    CHANNEL_ID,
+
+                message_id:
+                    message.message_id
+
+            }
+        );
+
+    }catch(error){
+
+        console.warn(
+            "⚠️ Temporary media message delete failed:",
+            error.message
+        );
+
+    }
+
+
+    return {
+
+        file_id:fileId,
+
+        filename:
+            file.originalname
+
+    };
+
+}
+
+
+/* =========================================================
+   SETTINGS API
+========================================================= */
+
+app.get(
+    "/api/settings",
+    checkAdmin,
+    function(req,res){
+
+        const settings =
+            loadSettings();
+
+
+        res.json({
+
+            ok:true,
+
+            settings
+
+        });
+
+    }
+);
+
+
+app.post(
+    "/api/settings",
+    checkAdmin,
+    function(req,res){
+
+        try{
+
+            const incoming =
+                req.body &&
+                req.body.settings
+                    ? req.body.settings
+                    : req.body;
+
+
+            const settings =
+                saveSettings(
+                    incoming
+                );
+
+
+            res.json({
+
+                ok:true,
+
+                settings
+
+            });
+
+
+        }catch(error){
+
+            console.error(
+                "Settings save error:",
+                error
+            );
+
+
+            res
+                .status(500)
+                .json({
+
+                    ok:false,
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   MEDIA UPLOAD API
+========================================================= */
+
+app.post(
+    "/api/upload",
+    checkAdmin,
+    upload.single("file"),
+    async function(req,res){
+
+        try{
+
+            if(!req.file){
+
+                return res
+                    .status(400)
+                    .json({
+
+                        ok:false,
+
+                        error:
+                            "File select করুন"
+
+                    });
+
+            }
+
+
+            const type =
+                String(
+                    req.body.media_type ||
+                    ""
+                )
+                .toLowerCase();
+
+
+            if(
+                type !== "video" &&
+                type !== "audio"
+            ){
+
+                return res
+                    .status(400)
+                    .json({
+
+                        ok:false,
+
+                        error:
+                            "Invalid media type"
+
+                    });
+
+            }
+
+
+            console.log(
+                "📤 Uploading " +
+                type +
+                " to Telegram..."
+            );
+
+
+            const result =
+                await uploadMediaToTelegram(
+                    req.file,
+                    type
+                );
+
+
+            console.log(
+                "✅ " +
+                type +
+                " file_id:",
+                result.file_id
+            );
+
+
+            res.json({
+
+                ok:true,
+
+                file_id:
+                    result.file_id,
+
+                filename:
+                    result.filename
+
+            });
+
+
+        }catch(error){
+
+            console.error(
+                "❌ Upload error:",
+                error
+            );
+
+
+            res
+                .status(500)
+                .json({
+
+                    ok:false,
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   REMOVE MEDIA
+========================================================= */
+
+app.post(
+    "/api/remove-media",
+    checkAdmin,
+    function(req,res){
+
+        try{
+
+            const type =
+                String(
+                    req.body.media_type ||
+                    ""
+                );
+
+
+            const settings =
+                loadSettings();
+
+
+            if(
+                type === "video"
+            ){
+
+                settings.video_file_id =
+                    "";
+
+                settings.video_filename =
+                    "";
+
+                settings.video_url =
+                    "";
+
+            }
+
+
+            if(
+                type === "audio"
+            ){
+
+                settings.audio_file_id =
+                    "";
+
+                settings.audio_filename =
+                    "";
+
+                settings.audio_url =
+                    "";
+
+            }
+
+
+            const saved =
+                saveSettings(
+                    settings
+                );
+
+
+            res.json({
+
+                ok:true,
+
+                settings:saved
+
+            });
+
+
+        }catch(error){
+
+            res
+                .status(500)
+                .json({
+
+                    ok:false,
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+app.post(
+    "/api/reset",
+    checkAdmin,
+    function(req,res){
+
+        const settings =
+            saveSettings(
+                DEFAULT_SETTINGS
+            );
+
+
+        res.json({
+
+            ok:true,
+
+            settings
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   CHANGE PASSWORD
+========================================================= */
+
+app.post(
+    "/api/change-password",
+    checkAdmin,
+    function(req,res){
+
+        const oldPassword =
+            String(
+                req.body.old_password ||
+                ""
+            );
+
+
+        const newPassword =
+            String(
+                req.body.new_password ||
+                ""
+            );
+
+
+        if(
+            oldPassword !==
+            loadPassword()
+        ){
+
+            return res
+                .status(401)
+                .json({
+
+                    ok:false,
+
+                    error:
+                        "Current password ভুল"
+
+                });
+
+        }
+
+
+        if(
+            newPassword.length < 4
+        ){
+
+            return res
+                .status(400)
+                .json({
+
+                    ok:false,
+
+                    error:
+                        "New password কমপক্ষে 4 characters"
+
+                });
+
+        }
+
+
+        savePassword(
+            newPassword
+        );
+
+
+        res.json({
+
+            ok:true,
+
+            message:
+                "Password changed"
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   ADMIN HTML
+========================================================= */
+
+const ADMIN_HTML =
+    path.join(
+        __dirname,
+        "admin.html"
+    );
+
+
+app.get(
+    "/",
+    function(req,res){
+
+        if(
+            fs.existsSync(
+                ADMIN_HTML
+            )
+        ){
+
+            return res.sendFile(
+                ADMIN_HTML
+            );
+
+        }
+
+
+        res.send(
+            "admin.html not found"
+        );
+
+    }
+);
+
+
+app.get(
+    "/admin",
+    function(req,res){
+
+        if(
+            fs.existsSync(
+                ADMIN_HTML
+            )
+        ){
+
+            return res.sendFile(
+                ADMIN_HTML
+            );
+
+        }
+
+
+        res.send(
+            "admin.html not found"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   BOT FUNCTIONS
+========================================================= */
+
+function mainKeyboard(
+    settings
+){
+
+    const rows = [];
+
+
+    for(
+        const button
+        of settings.main_buttons
+    ){
+
+        if(
+            button &&
+            button.enabled &&
+            button.text &&
+            validUrl(button.url)
+        ){
+
+            rows.push([
+
+                {
+                    text:
+                        button.text,
+
+                    url:
+                        button.url
+
+                }
+
+            ]);
+
+        }
+
+    }
+
+
+    return rows.length
+        ? {
+            inline_keyboard:
+                rows
+          }
+        : undefined;
+
+}
+
+
+function mediaKeyboard(
+    settings
+){
+
+    const rows = [];
+
+
+    for(
+        const button
+        of settings.video_buttons
+    ){
+
+        if(
+            button &&
+            button.enabled &&
+            button.text &&
+            validUrl(button.url)
+        ){
+
+            rows.push([
+
+                {
+                    text:
+                        button.text,
+
+                    url:
+                        button.url
+
+                }
+
+            ]);
+
+        }
+
+    }
+
+
+    return rows.length
+        ? {
+            inline_keyboard:
+                rows
+          }
+        : undefined;
+
+}
+
+
+function validUrl(
+    url
+){
+
+    try{
+
+        const parsed =
+            new URL(
+                String(url)
+            );
+
+
+        return (
+            parsed.protocol ===
+                "https:" ||
+            parsed.protocol ===
+                "tg:"
+        );
+
+    }catch(error){
+
+        return false;
+
+    }
+
+}
+
+
+function replaceText(
+    text,
+    user
+){
+
+    return String(
+        text || ""
+    )
+    .replaceAll(
+        "{first_name}",
+        user.first_name ||
+        user.username ||
+        "User"
+    )
+    .replaceAll(
+        "{channel_title}",
+        loadSettings()
+            .channel_title ||
+        "SOHEL VAI"
+    );
+
+}
+
+
+function ephemeral(
+    userId
+){
+
+    return {
+
+        receiver_user_id:
+            Number(userId)
+
+    };
+
+}
+
+
+/* =========================================================
+   PROFILE PHOTO
+========================================================= */
+
+async function getProfilePhotoFileId(
+    userId
+){
+
+    try{
+
+        const result =
+            await telegram(
+                "getUserProfilePhotos",
+                {
+
+                    user_id:
+                        Number(userId),
+
+                    offset:0,
+
+                    limit:1
+
+                }
+            );
+
+
+        if(
+            !result ||
+            !result.photos ||
+            !result.photos.length
+        ){
+
+            return null;
+
+        }
+
+
+        const photos =
+            result.photos[0];
+
+
+        if(
+            !photos ||
+            !photos.length
+        ){
+
+            return null;
+
+        }
+
+
+        return photos[
+            photos.length - 1
+        ].file_id;
+
+
+    }catch(error){
+
+        console.warn(
+            "⚠️ Profile photo unavailable:",
+            error.message
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+/* =========================================================
+   SEND EPHEMERAL TEXT
+========================================================= */
+
+async function sendWelcomeText(
+    userId,
+    text,
+    keyboard
+){
+
+    const body = {
+
+        chat_id:
+            CHANNEL_ID,
+
+        text,
+
+        ephemeral_message_parameters:
+            ephemeral(userId)
+
+    };
+
+
+    if(keyboard){
+
+        body.reply_markup =
+            keyboard;
+
+    }
+
+
+    return telegram(
+        "sendMessage",
+        body
+    );
+
+}
+
+
+/* =========================================================
+   SEND PHOTO
+========================================================= */
+
+async function sendWelcomePhoto(
+    userId,
+    photo,
+    caption,
+    keyboard
+){
+
+    const body = {
+
+        chat_id:
+            CHANNEL_ID,
+
+        photo,
+
+        caption,
+
+        ephemeral_message_parameters:
+            ephemeral(userId)
+
+    };
+
+
+    if(keyboard){
+
+        body.reply_markup =
+            keyboard;
+
+    }
+
+
+    return telegram(
+        "sendPhoto",
+        body
+    );
+
+}
+
+
+/* =========================================================
+   SEND VIDEO
+========================================================= */
+
+async function sendWelcomeVideo(
+    userId,
+    source
+){
+
+    return telegram(
+        "sendVideo",
+        {
+
+            chat_id:
+                CHANNEL_ID,
+
+            video:
+                source,
+
+            ephemeral_message_parameters:
+                ephemeral(userId)
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SEND AUDIO
+========================================================= */
+
+async function sendWelcomeAudio(
+    userId,
+    source,
+    caption
+){
+
+    const body = {
+
+        chat_id:
+            CHANNEL_ID,
+
+        audio:
+            source,
+
+        ephemeral_message_parameters:
+            ephemeral(userId)
+
+    };
+
+
+    if(caption){
+
+        body.caption =
+            caption;
+
+    }
+
+
+    return telegram(
+        "sendAudio",
+        body
+    );
+
+}
+
+
+/* =========================================================
+   SEND MEDIA BUTTON MESSAGE
+========================================================= */
+
+async function sendMediaButtons(
+    userId,
+    keyboard
+){
+
+    if(!keyboard){
+
+        return null;
+
+    }
+
+
+    return telegram(
+        "sendMessage",
+        {
+
+            chat_id:
+                CHANNEL_ID,
+
+            text:
+                "👇 নিচের অপশন থেকে নির্বাচন করুন:",
+
+            reply_markup:
+                keyboard,
+
+            ephemeral_message_parameters:
+                ephemeral(userId)
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DELETE EPHEMERAL
+========================================================= */
+
+async function deleteEphemeral(
+    userId,
+    messageId
+){
+
+    if(
+        !messageId
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await telegram(
+            "deleteEphemeralMessage",
+            {
+
+                chat_id:
+                    CHANNEL_ID,
+
+                receiver_user_id:
+                    Number(userId),
+
+                ephemeral_message_id:
+                    Number(messageId)
+
+            }
+        );
+
+
+    }catch(error){
+
+        console.warn(
+            "⚠️ Ephemeral delete failed:",
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DELETE LATER
+========================================================= */
+
+function scheduleDelete(
+    userId,
+    messages,
+    seconds
+){
+
+    const ids =
+        messages
+            .filter(Boolean)
+            .map(
+                message =>
+                    message.ephemeral_message_id
+            )
+            .filter(Boolean);
+
+
+    if(!ids.length){
+
+        return;
+
+    }
+
+
+    setTimeout(
+        async function(){
+
+            for(
+                const id
+                of ids
+            ){
+
+                await deleteEphemeral(
+                    userId,
+                    id
+                );
+
+            }
+
+        },
+        seconds * 1000
+    );
+
+}
+
+
+/* =========================================================
+   GET VIDEO SOURCE
+========================================================= */
+
+function getVideoSource(
+    settings
+){
+
+    if(
+        settings.video_file_id
+    ){
+
+        return settings.video_file_id;
+
+    }
+
+
+    if(
+        settings.video_url
+    ){
+
+        return settings.video_url;
+
+    }
+
+
+    /*
+     * Legacy support
+     */
+
+    if(
+        settings.media_type ===
+            "video" &&
+        settings.media_file_id
+    ){
+
+        return settings.media_file_id;
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================================
+   GET AUDIO SOURCE
+========================================================= */
+
+function getAudioSource(
+    settings
+){
+
+    if(
+        settings.audio_file_id
+    ){
+
+        return settings.audio_file_id;
+
+    }
+
+
+    if(
+        settings.audio_url
+    ){
+
+        return settings.audio_url;
+
+    }
+
+
+    /*
+     * Legacy support
+     */
+
+    if(
+        settings.media_type ===
+            "audio" &&
+        settings.media_file_id
+    ){
+
+        return settings.media_file_id;
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================================
+   SEND COMPLETE WELCOME
+========================================================= */
+
+async function sendWelcome(
+    user
+){
+
+    const settings =
+        loadSettings();
+
+
+    if(
+        !settings.welcome_enabled
+    ){
+
+        console.log(
+            "ℹ️ Welcome disabled"
+        );
+
+        return;
+
+    }
+
+
+    const userId =
+        Number(user.id);
+
+
+    if(
+        !userId
+    ){
+
+        return;
+
+    }
+
+
+    const text =
+        replaceText(
+            settings.welcome_text,
+            user
+        );
+
+
+    const mainButtons =
+        mainKeyboard(
+            settings
+        );
+
+
+    const mediaButtons =
+        mediaKeyboard(
+            settings
+        );
+
+
+    const sent = [];
+
+
+    console.log(
+        "===================================="
+    );
+
+    console.log(
+        "🎉 NEW MEMBER:",
+        userId,
+        user.first_name
+    );
+
+    console.log(
+        "📦 VIDEO:",
+        Boolean(
+            getVideoSource(
+                settings
+            )
+        )
+    );
+
+    console.log(
+        "📦 AUDIO:",
+        Boolean(
+            getAudioSource(
+                settings
+            )
+        )
+    );
+
+
+    /*
+     * =====================================================
+     * 1. WELCOME + PROFILE PHOTO
+     * =====================================================
+     */
+
+    let welcomeMessage =
+        null;
+
+
+    if(
+        settings.profile_photo_enabled
+    ){
+
+        const photoId =
+            await getProfilePhotoFileId(
+                userId
+            );
+
+
+        if(photoId){
+
+            try{
+
+                welcomeMessage =
+                    await sendWelcomePhoto(
+
+                        userId,
+
+                        photoId,
+
+                        text,
+
+                        mainButtons
+
+                    );
+
+
+                console.log(
+                    "✅ WELCOME PHOTO SENT:",
+                    welcomeMessage
+                        .ephemeral_message_id
+                );
+
+
+            }catch(error){
+
+                console.warn(
+                    "⚠️ Photo send failed, text fallback:",
+                    error.message
+                );
+
+            }
+
+        }
+
+    }
+
+
+    /*
+     * Photo unavailable হলে text
+     */
+
+    if(
+        !welcomeMessage
+    ){
+
+        try{
+
+            welcomeMessage =
+                await sendWelcomeText(
+
+                    userId,
+
+                    text,
+
+                    mainButtons
+
+                );
+
+
+            console.log(
+                "✅ WELCOME TEXT SENT:",
+                welcomeMessage
+                    .ephemeral_message_id
+            );
+
+
+        }catch(error){
+
+            console.error(
+                "❌ WELCOME SEND FAILED:",
+                error.message
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    sent.push(
+        welcomeMessage
+    );
+
+
+    /*
+     * =====================================================
+     * 2. VIDEO
+     * =====================================================
+     */
+
+    const videoSource =
+        getVideoSource(
+            settings
+        );
+
+
+    if(videoSource){
+
+        try{
+
+            console.log(
+                "🎬 SENDING VIDEO..."
+            );
+
+
+            const videoMessage =
+                await sendWelcomeVideo(
+
+                    userId,
+
+                    videoSource
+
+                );
+
+
+            sent.push(
+                videoMessage
+            );
+
+
+            console.log(
+                "✅ VIDEO SENT:",
+                videoMessage
+                    .ephemeral_message_id
+            );
+
+
+        }catch(error){
+
+            console.error(
+                "❌ VIDEO SEND FAILED:",
+                error.message
+            );
+
+        }
+
+    }
+
+
+    /*
+     * =====================================================
+     * 3. AUDIO
+     * =====================================================
+     */
+
+    const audioSource =
+        getAudioSource(
+            settings
+        );
+
+
+    if(audioSource){
+
+        try{
+
+            console.log(
+                "🎵 SENDING AUDIO..."
+            );
+
+
+            const audioMessage =
+                await sendWelcomeAudio(
+
+                    userId,
+
+                    audioSource,
+
+                    settings.voice_text
+
+                );
+
+
+            sent.push(
+                audioMessage
+            );
+
+
+            console.log(
+                "✅ AUDIO SENT:",
+                audioMessage
+                    .ephemeral_message_id
+            );
+
+
+        }catch(error){
+
+            console.error(
+                "❌ AUDIO SEND FAILED:",
+                error.message
+            );
+
+        }
+
+    }
+
+
+    /*
+     * =====================================================
+     * 4. MEDIA BUTTONS
+     *
+     * Video + Audio:
+     * Audio-এর পরে
+     *
+     * Only Video:
+     * Video-এর পরে
+     *
+     * Only Audio:
+     * Audio-এর পরে
+     * =====================================================
+     */
+
+    if(mediaButtons){
+
+        try{
+
+            const mediaButtonMessage =
+                await sendMediaButtons(
+
+                    userId,
+
+                    mediaButtons
+
+                );
+
+
+            sent.push(
+                mediaButtonMessage
+            );
+
+
+            console.log(
+                "✅ MEDIA BUTTONS SENT:",
+                mediaButtonMessage
+                    .ephemeral_message_id
+            );
+
+
+        }catch(error){
+
+            console.error(
+                "❌ MEDIA BUTTON SEND FAILED:",
+                error.message
+            );
+
+        }
+
+    }
+
+
+    /*
+     * =====================================================
+     * 5. AUTO DELETE
+     * =====================================================
+     */
+
+    scheduleDelete(
+
+        userId,
+
+        sent,
+
+        settings.duration
+
+    );
+
+
+    console.log(
+        "⏱ AUTO DELETE:",
+        settings.duration,
+        "seconds"
+    );
+
+    console.log(
+        "===================================="
+    );
+
+}
+
+
+/* =========================================================
+   WELCOME TEST
+========================================================= */
+
+app.get(
+    "/welcome_test",
+    checkAdmin,
+    async function(req,res){
+
+        try{
+
+            const userId =
+                Number(
+                    req.query.user_id ||
+                    ""
+                );
+
+
+            if(!userId){
+
+                return res
+                    .status(400)
+                    .json({
+
+                        ok:false,
+
+                        error:
+                            "user_id দিন"
+
+                    });
+
+            }
+
+
+            const user = {
+
+                id:userId,
+
+                first_name:
+                    "Test User"
+
+            };
+
+
+            await sendWelcome(
+                user
+            );
+
+
+            res.json({
+
+                ok:true,
+
+                message:
+                    "Welcome test sent"
+
+            });
+
+
+        }catch(error){
+
+            res
+                .status(500)
+                .json({
+
+                    ok:false,
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   HEALTH
+========================================================= */
+
+app.get(
+    "/health",
+    function(req,res){
+
+        res.json({
+
+            ok:true,
+
+            bot:true,
+
+            channel_id:
+                CHANNEL_ID,
+
+            media_storage:
+                false
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   LONG POLLING
+========================================================= */
+
+let polling =
+    true;
+
+let offset =
+    0;
+
+
+async function startPolling(){
+
+    console.log(
+        "🤖 Telegram polling started"
+    );
+
+    console.log(
+        "📢 CHANNEL_ID:",
+        CHANNEL_ID
+    );
+
+    console.log(
+        "📦 MEDIA STORAGE: DISABLED"
+    );
+
+
+    /*
+     * Long polling শুরু করার আগে webhook remove
+     */
+
+    try{
+
+        await telegram(
+            "deleteWebhook",
+            {
+                drop_pending_updates:false
+            }
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "❌ deleteWebhook:",
+            error.message
+        );
+
+    }
+
+
+    while(polling){
+
+        try{
+
+            const updates =
+                await telegram(
+                    "getUpdates",
+                    {
+
+                        offset,
+
+                        timeout:30,
+
+                        allowed_updates:[
+                            "chat_member",
+                            "message"
+                        ]
+
+                    }
+                );
+
+
+            if(
+                !Array.isArray(updates)
+            ){
+
+                continue;
+
+            }
+
+
+            for(
+                const update
+                of updates
+            ){
+
+                offset =
+                    update.update_id + 1;
+
+
+                /*
+                 * =========================================
+                 * CHAT MEMBER
+                 * =========================================
+                 */
+
+                if(
+                    update.chat_member
+                ){
+
+                    const cm =
+                        update.chat_member;
+
+
+                    if(
+                        Number(cm.chat.id) !==
+                        CHANNEL_ID
+                    ){
+
+                        continue;
+
+                    }
+
+
+                    const oldStatus =
+                        cm.old_chat_member &&
+                        cm.old_chat_member.status;
+
+
+                    const newStatus =
+                        cm.new_chat_member &&
+                        cm.new_chat_member.status;
+
+
+                    console.log(
+                        "👤 MEMBER UPDATE:",
+                        oldStatus,
+                        "→",
+                        newStatus
+                    );
+
+
+                    /*
+                     * left/kicked → member
+                     */
+
+                    if(
+
+                        (
+                            oldStatus ===
+                                "left" ||
+
+                            oldStatus ===
+                                "kicked"
+                        ) &&
+
+                        (
+                            newStatus ===
+                                "member" ||
+
+                            newStatus ===
+                                "administrator" ||
+
+                            newStatus ===
+                                "creator"
+                        )
+
+                    ){
+
+                        const user =
+                            cm.new_chat_member
+                                .user;
+
+
+                        if(
+                            user &&
+                            !user.is_bot
+                        ){
+
+                            await sendWelcome(
+                                user
+                            );
+
+                        }
+
+                    }
+
+                }
+
+
+                /*
+                 * =========================================
+                 * COMMAND
+                 * =========================================
+                 */
+
+                if(
+                    update.message
+                ){
+
+                    const message =
+                        update.message;
+
+
+                    if(
+                        message.text ===
+                            "/welcome_test"
+                    ){
+
+                        console.log(
+                            "🧪 /welcome_test"
+                        );
+
+
+                        await sendWelcome(
+
+                            message.from
+
+                        );
+
+                    }
+
+                }
+
+            }
+
+
+        }catch(error){
+
+            console.error(
+                "❌ Polling error:",
+                error.message
+            );
+
+
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        3000
+                    )
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   START SERVER
+========================================================= */
+
+app.listen(
+    PORT,
+    function(){
+
+        console.log(
+            "===================================="
+        );
+
+        console.log(
+            "🚀 SOHEL VAI SYSTEM STARTED"
+        );
+
+        console.log(
+            "🌐 PORT:",
+            PORT
+        );
+
+        console.log(
+            "📢 CHANNEL:",
+            CHANNEL_ID
+        );
+
+        console.log(
+            "📦 MEDIA STORAGE: OFF"
+        );
+
+        console.log(
+            "🛡 ADMIN API: ON"
+        );
+
+        console.log(
+            "🤖 BOT: ON"
+        );
+
+        console.log(
+            "===================================="
+        );
+
+
+        startPolling();
+
+    }
+);
+
+
+/* =========================================================
+   SHUTDOWN
+========================================================= */
+
+process.on(
+    "SIGTERM",
+    function(){
+
+        polling =
+            false;
+
+        process.exit(0);
+
+    }
+);
+
+
+process.on(
+    "SIGINT",
+    function(){
+
+        polling =
+            false;
+
+        process.exit(0);
+
+    }
+);
