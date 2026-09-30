@@ -1,0 +1,2065 @@
+<!doctype html>
+<html lang="bn">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+
+<title>SOHEL VAI ADMIN PANEL</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:14px;
+    background:#f4f6fb;
+    font-family:
+        Arial,
+        "Noto Sans Bengali",
+        sans-serif;
+    color:#171b2b;
+}
+
+.app{
+    max-width:650px;
+    margin:auto;
+}
+
+.card{
+    background:#fff;
+    padding:16px;
+    border-radius:16px;
+    margin-bottom:14px;
+    box-shadow:0 5px 18px #0000000d;
+}
+
+h1{
+    margin:0;
+    font-size:22px;
+}
+
+h2{
+    font-size:17px;
+    margin:0 0 12px;
+}
+
+.head{
+    background:
+        linear-gradient(
+            135deg,
+            #7138f5,
+            #4c20bd
+        );
+    color:#fff;
+}
+
+.head p{
+    margin:6px 0 0;
+    opacity:.85;
+}
+
+label{
+    display:block;
+    font-weight:700;
+    font-size:13px;
+    margin:9px 0 5px;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:11px;
+    border:1px solid #dfe3eb;
+    border-radius:10px;
+    background:#fafbfe;
+    font-size:14px;
+}
+
+textarea{
+    min-height:160px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:8px 0;
+}
+
+.switch{
+    width:48px;
+    height:26px;
+    position:relative;
+}
+
+.switch input{
+    display:none;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+    background:#cbd1dc;
+    border-radius:30px;
+}
+
+.slider:before{
+    content:"";
+    position:absolute;
+    width:20px;
+    height:20px;
+    left:3px;
+    top:3px;
+    background:#fff;
+    border-radius:50%;
+    transition:.2s;
+}
+
+.switch input:checked + .slider{
+    background:#7138f5;
+}
+
+.switch input:checked + .slider:before{
+    transform:translateX(22px);
+}
+
+.btn{
+    width:100%;
+    border:0;
+    border-radius:10px;
+    padding:12px;
+    margin-top:9px;
+    font-weight:800;
+    color:#fff;
+    background:#7138f5;
+    cursor:pointer;
+}
+
+.green{
+    background:#16a36b;
+}
+
+.red{
+    background:#dc3545;
+}
+
+.dark{
+    background:#171c2d;
+}
+
+.box{
+    border:1px solid #e4e7ee;
+    border-radius:12px;
+    padding:12px;
+    margin-top:10px;
+}
+
+.status{
+    font-size:13px;
+    margin-top:7px;
+    min-height:18px;
+}
+
+.ok{
+    color:#168b5c;
+}
+
+.err{
+    color:#dc3545;
+}
+
+.small{
+    font-size:12px;
+    color:#737b8e;
+    line-height:1.5;
+}
+
+.preview{
+    background:#eef1f7;
+    padding:14px;
+    border-radius:12px;
+    white-space:pre-wrap;
+}
+
+.pb{
+    display:block;
+    background:#7138f5;
+    color:#fff;
+    text-align:center;
+    text-decoration:none;
+    padding:9px;
+    border-radius:8px;
+    margin-top:7px;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.login{
+    min-height:90vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.login .card{
+    width:100%;
+    max-width:420px;
+}
+
+.media{
+    padding:9px;
+    background:#f1f3f8;
+    border-radius:8px;
+    font-size:12px;
+    margin-top:8px;
+    word-break:break-all;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- ========================================================
+LOGIN
+========================================================= -->
+
+<div id="login" class="login">
+
+<div class="card">
+
+<h2>🔐 Admin Login</h2>
+
+<label>Password</label>
+
+<input
+    id="lp"
+    type="password"
+    placeholder="Admin Password"
+>
+
+<button
+    class="btn"
+    onclick="doLogin()"
+>
+    LOGIN
+</button>
+
+<div
+    id="le"
+    class="status err"
+></div>
+
+</div>
+
+</div>
+
+
+<!-- ========================================================
+ADMIN APP
+========================================================= -->
+
+<div id="app" class="app hidden">
+
+
+<!-- HEADER -->
+
+<div class="card head">
+
+<h1>
+👑 SOHEL VAI ADMIN PANEL
+</h1>
+
+<p>
+Private Welcome System Control
+</p>
+
+</div>
+
+
+<!-- ========================================================
+BASIC
+========================================================= -->
+
+<div class="card">
+
+<h2>⚙️ Basic Welcome</h2>
+
+
+<div class="row">
+
+<b>Welcome ON/OFF</b>
+
+<label class="switch">
+
+<input
+    id="we"
+    type="checkbox"
+>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+
+<div class="row">
+
+<b>Profile Photo</b>
+
+<label class="switch">
+
+<input
+    id="pp"
+    type="checkbox"
+>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+
+<label>Channel Name</label>
+
+<input id="ct">
+
+
+<label>Welcome Text</label>
+
+<textarea id="wt"></textarea>
+
+<div class="small">
+
+Use:
+
+{first_name}
+
+and
+
+{channel_title}
+
+</div>
+
+
+<label>Text Size</label>
+
+<select id="ws">
+
+<option value="small">
+Small
+</option>
+
+<option value="medium">
+Medium
+</option>
+
+<option value="large">
+Large
+</option>
+
+</select>
+
+
+<button
+    class="btn"
+    onclick="saveBasic()"
+>
+💾 SAVE BASIC
+</button>
+
+<div
+    id="bs"
+    class="status"
+></div>
+
+</div>
+
+
+<!-- ========================================================
+MAIN BUTTONS
+========================================================= -->
+
+<div class="card">
+
+<h2>🔘 Main Buttons (3)</h2>
+
+<div id="main"></div>
+
+<button
+    class="btn"
+    onclick="saveButtons()"
+>
+💾 SAVE MAIN BUTTONS
+</button>
+
+<div
+    id="ms"
+    class="status"
+></div>
+
+</div>
+
+
+<!-- ========================================================
+VIDEO
+========================================================= -->
+
+<div class="card">
+
+<h2>🎬 Welcome Video</h2>
+
+<input
+    id="vf"
+    type="file"
+    accept="video/*"
+>
+
+<button
+    class="btn green"
+    onclick="upload('video')"
+>
+📤 UPLOAD VIDEO
+</button>
+
+<div
+    id="vs"
+    class="status"
+></div>
+
+<div
+    id="vn"
+    class="media"
+>
+No video uploaded
+</div>
+
+<label>
+Optional Video URL
+</label>
+
+<input
+    id="vu"
+    placeholder="https://..."
+>
+
+<button
+    class="btn red"
+    onclick="removeMedia('video')"
+>
+🗑 REMOVE VIDEO
+</button>
+
+</div>
+
+
+<!-- ========================================================
+AUDIO
+========================================================= -->
+
+<div class="card">
+
+<h2>🎵 Welcome Audio</h2>
+
+<input
+    id="af"
+    type="file"
+    accept="audio/*"
+>
+
+<button
+    class="btn green"
+    onclick="upload('audio')"
+>
+📤 UPLOAD AUDIO
+</button>
+
+<div
+    id="as"
+    class="status"
+></div>
+
+<div
+    id="an"
+    class="media"
+>
+No audio uploaded
+</div>
+
+<label>
+Optional Audio URL
+</label>
+
+<input
+    id="au"
+    placeholder="https://..."
+>
+
+<label>
+Audio Caption
+</label>
+
+<input
+    id="vt"
+    placeholder="Optional audio text"
+>
+
+<button
+    class="btn red"
+    onclick="removeMedia('audio')"
+>
+🗑 REMOVE AUDIO
+</button>
+
+</div>
+
+
+<!-- ========================================================
+MEDIA BUTTONS
+========================================================= -->
+
+<div class="card">
+
+<h2>🔗 Media Buttons (2)</h2>
+
+<div id="mediaButtons"></div>
+
+<button
+    class="btn"
+    onclick="saveMediaButtons()"
+>
+💾 SAVE MEDIA BUTTONS
+</button>
+
+<div
+    id="mbs"
+    class="status"
+></div>
+
+<div class="small">
+
+Video এবং Audio দুটো থাকলে
+এই ২টি button শেষের Audio message-এর
+নিচে থাকবে।
+
+শুধু Video থাকলে Video-এর নিচে থাকবে।
+
+শুধু Audio থাকলে Audio-এর নিচে থাকবে।
+
+</div>
+
+</div>
+
+
+<!-- ========================================================
+AUTO DELETE
+========================================================= -->
+
+<div class="card">
+
+<h2>⏱ Auto Delete</h2>
+
+<select id="dur">
+
+<option value="30">
+30 Seconds
+</option>
+
+<option value="60">
+1 Minute
+</option>
+
+<option value="120">
+2 Minutes
+</option>
+
+<option value="300">
+5 Minutes
+</option>
+
+<option value="600">
+10 Minutes
+</option>
+
+<option value="900">
+15 Minutes
+</option>
+
+</select>
+
+<button
+    class="btn"
+    onclick="saveDuration()"
+>
+💾 SAVE DELETE TIME
+</button>
+
+<div
+    id="ds"
+    class="status"
+></div>
+
+</div>
+
+
+<!-- ========================================================
+PREVIEW
+========================================================= -->
+
+<div class="card">
+
+<h2>👁️ System Preview</h2>
+
+<div
+    id="previewBox"
+    class="preview"
+></div>
+
+<button
+    class="btn dark"
+    onclick="preview()"
+>
+🔄 REFRESH PREVIEW
+</button>
+
+</div>
+
+
+<!-- ========================================================
+SAVE ALL
+========================================================= -->
+
+<div class="card">
+
+<h2>💾 Complete System</h2>
+
+<button
+    class="btn"
+    onclick="saveAll()"
+>
+💾 ALL WELCOME SYSTEM SAVE
+</button>
+
+<button
+    class="btn red"
+    onclick="resetAll()"
+>
+🚫 RESET ALL
+</button>
+
+<div
+    id="alls"
+    class="status"
+></div>
+
+</div>
+
+
+<!-- ========================================================
+PASSWORD
+========================================================= -->
+
+<div class="card">
+
+<h2>🔐 Change Password</h2>
+
+<input
+    id="old"
+    type="password"
+    placeholder="Current password"
+>
+
+<input
+    id="new"
+    type="password"
+    placeholder="New password"
+>
+
+<input
+    id="conf"
+    type="password"
+    placeholder="Confirm new password"
+>
+
+<button
+    class="btn dark"
+    onclick="changePass()"
+>
+🔐 CHANGE PASSWORD
+</button>
+
+<div
+    id="ps"
+    class="status"
+></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+
+const API = {
+
+    settings:"/api/settings",
+
+    upload:"/api/upload",
+
+    remove:"/api/remove-media",
+
+    reset:"/api/reset",
+
+    password:"/api/change-password"
+
+};
+
+
+let PASSWORD = "";
+
+let SETTINGS = {};
+
+
+const DEFAULT_SETTINGS = {
+
+    welcome_enabled:true,
+
+    profile_photo_enabled:true,
+
+    channel_title:
+        "SOHEL VAI OFFICIAL CHANNEL",
+
+    welcome_text:
+`👋 👤 {first_name} ⸙ 🇧🇩
+
+🎉 আপনাকে স্বাগতম!
+👑 SOHEL VAI OFFICIAL CHANNEL JOIN করার জন্য 💖
+
+❤️ আসসালামু আলাইকুম প্রিয় ভাই ❤️
+আমাদের Official Channel-এ Join করার জন্য আপনাকে আন্তরিক ধন্যবাদ।
+
+প্রিয় ভাই আমাদের সাথেই থাকুন আশা করি কোন না কোন একদিন অবশ্যই আপনার উপকারে আসবোই ইনশাআল্লাহ 🥰
+
+📢 নিয়মিত নতুন Update পেতে আমাদের সাথে থাকুন।🫶😘
+👑 — SOHEL VAI — 👑`,
+
+    welcome_text_size:"medium",
+
+    duration:30,
+
+    duration_seconds:30,
+
+    video_file_id:"",
+
+    video_filename:"",
+
+    video_url:"",
+
+    audio_file_id:"",
+
+    audio_filename:"",
+
+    audio_url:"",
+
+    voice_text:
+        "🎶 গুরুত্বপূর্ণ ভয়েস শুনুন 🎵🎵",
+
+    voice_button_text:
+        "🎶🎶 𝗢𝗣𝗘𝗡 𝗩𝗢𝗜𝗖𝗘 🎵🎵",
+
+    main_buttons:[
+
+        {
+            enabled:true,
+            text:
+                "👑 𝗩𝗜𝗣 𝗚𝗥𝗢𝗨𝗣 𝗙𝗔𝗦𝗧 𝗝𝗢𝗜𝗡 👑",
+            url:
+                "https://t.me/+WZR7nsATt1szNmRh"
+        },
+
+        {
+            enabled:true,
+            text:
+                "😈 𝗔𝗜 𝗛𝗔𝗖𝗞 𝐋𝐈𝐍𝐊 𝐎𝐏𝐄𝐍 😈",
+            url:
+                "https://t.me/sohel_ai_prediction_bot"
+        },
+
+        {
+            enabled:true,
+            text:
+                "💬 𝗦𝗨𝗣𝗣𝗢𝗥𝗧 𝗔𝗗𝗠𝗜𝗡 ☎️",
+            url:
+                "https://t.me/TRADER_SOHEL_BDT_TOP"
+        }
+
+    ],
+
+    video_buttons:[
+
+        {
+            enabled:true,
+            text:
+                "🔵 𝗕𝗗𝗪𝗜𝗡𝟮𝟰 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗝𝗢𝗜𝗡🎰",
+            url:
+                "https://t.me/+gNZZwOIN72BjYzQ1"
+        },
+
+        {
+            enabled:true,
+            text:
+                "🟡 𝐃𝐊𝐖𝐈𝐍 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗝𝗎𝗈𝗜𝗡🎰",
+            url:
+                "https://t.me/EARNING_TEME_bd"
+        }
+
+    ]
+
+};
+
+
+function clone(obj){
+
+    return JSON.parse(
+        JSON.stringify(obj)
+    );
+
+}
+
+
+function normalizeSettings(value){
+
+    const source =
+        value &&
+        typeof value === "object"
+            ? value
+            : {};
+
+    SETTINGS = {
+
+        ...clone(DEFAULT_SETTINGS),
+
+        ...source
+
+    };
+
+
+    SETTINGS.main_buttons =
+        Array.isArray(
+            SETTINGS.main_buttons
+        )
+        ? SETTINGS.main_buttons.slice(0,3)
+        : clone(
+            DEFAULT_SETTINGS.main_buttons
+        );
+
+
+    SETTINGS.video_buttons =
+        Array.isArray(
+            SETTINGS.video_buttons
+        )
+        ? SETTINGS.video_buttons.slice(0,2)
+        : clone(
+            DEFAULT_SETTINGS.video_buttons
+        );
+
+
+    while(
+        SETTINGS.main_buttons.length < 3
+    ){
+
+        SETTINGS.main_buttons.push({
+
+            enabled:false,
+            text:"",
+            url:""
+
+        });
+
+    }
+
+
+    while(
+        SETTINGS.video_buttons.length < 2
+    ){
+
+        SETTINGS.video_buttons.push({
+
+            enabled:false,
+            text:"",
+            url:""
+
+        });
+
+    }
+
+
+    if(
+        !SETTINGS.duration ||
+        Number(SETTINGS.duration) < 30
+    ){
+
+        SETTINGS.duration = 30;
+
+    }
+
+
+    SETTINGS.duration =
+        Math.min(
+            900,
+            Number(SETTINGS.duration)
+        );
+
+
+    SETTINGS.duration_seconds =
+        SETTINGS.duration;
+
+
+    return SETTINGS;
+
+}
+
+
+async function apiRequest(
+    url,
+    options={}
+){
+
+    options.headers = {
+
+        ...(options.headers || {}),
+
+        "X-Admin-Password":
+            PASSWORD
+
+    };
+
+
+    const response =
+        await fetch(
+            url,
+            options
+        );
+
+
+    const data =
+        await response
+            .json()
+            .catch(
+                ()=>({})
+            );
+
+
+    if(!response.ok){
+
+        throw new Error(
+            data.error ||
+            data.message ||
+            "HTTP " +
+            response.status
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+async function doLogin(){
+
+    const password =
+        document
+            .getElementById("lp")
+            .value
+            .trim();
+
+
+    if(!password){
+
+        document
+            .getElementById("le")
+            .textContent =
+                "❌ Password দিন";
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                API.settings,
+                {
+
+                    headers:{
+
+                        "X-Admin-Password":
+                            password
+
+                    }
+
+                }
+            );
+
+
+        const data =
+            await response
+                .json()
+                .catch(
+                    ()=>({})
+                );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error ||
+                "Login failed"
+            );
+
+        }
+
+
+        PASSWORD =
+            password;
+
+
+        normalizeSettings(
+            data.settings
+        );
+
+
+        loadSettingsIntoPanel();
+
+
+        document
+            .getElementById("login")
+            .classList
+            .add("hidden");
+
+
+        document
+            .getElementById("app")
+            .classList
+            .remove("hidden");
+
+
+        preview();
+
+
+    }catch(error){
+
+        document
+            .getElementById("le")
+            .textContent =
+                "❌ " +
+                error.message;
+
+    }
+
+}
+
+
+function loadSettingsIntoPanel(){
+
+    document.getElementById("we").checked =
+        SETTINGS.welcome_enabled !== false;
+
+
+    document.getElementById("pp").checked =
+        SETTINGS.profile_photo_enabled !== false;
+
+
+    document.getElementById("ct").value =
+        SETTINGS.channel_title || "";
+
+
+    document.getElementById("wt").value =
+        SETTINGS.welcome_text || "";
+
+
+    document.getElementById("ws").value =
+        SETTINGS.welcome_text_size ||
+        "medium";
+
+
+    document.getElementById("dur").value =
+        String(
+            SETTINGS.duration || 30
+        );
+
+
+    document.getElementById("vu").value =
+        SETTINGS.video_url || "";
+
+
+    document.getElementById("au").value =
+        SETTINGS.audio_url || "";
+
+
+    document.getElementById("vt").value =
+        SETTINGS.voice_text || "";
+
+
+    document.getElementById("vn").textContent =
+        SETTINGS.video_filename ||
+        (
+            SETTINGS.video_file_id
+                ? "Video uploaded"
+                : "No video uploaded"
+        );
+
+
+    document.getElementById("an").textContent =
+        SETTINGS.audio_filename ||
+        (
+            SETTINGS.audio_file_id
+                ? "Audio uploaded"
+                : "No audio uploaded"
+        );
+
+
+    renderButtons(
+        "main",
+        SETTINGS.main_buttons
+    );
+
+
+    renderButtons(
+        "mediaButtons",
+        SETTINGS.video_buttons
+    );
+
+}
+
+
+function escapeHtml(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/"/g,"&quot;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+
+}
+
+
+function renderButtons(
+    containerId,
+    buttons
+){
+
+    const box =
+        document.getElementById(
+            containerId
+        );
+
+
+    box.innerHTML = "";
+
+
+    buttons.forEach(
+        function(button,index){
+
+            box.insertAdjacentHTML(
+                "beforeend",
+
+                `
+
+                <div class="box">
+
+                    <b>
+                        Button ${index + 1}
+                    </b>
+
+                    <div class="row">
+
+                        <span>
+                            ON / OFF
+                        </span>
+
+                        <label class="switch">
+
+                            <input
+                                id="${containerId}${index}e"
+                                type="checkbox"
+                                ${
+                                    button.enabled
+                                        ? "checked"
+                                        : ""
+                                }
+                            >
+
+                            <span
+                                class="slider"
+                            ></span>
+
+                        </label>
+
+                    </div>
+
+                    <label>
+                        Text
+                    </label>
+
+                    <input
+                        id="${containerId}${index}t"
+                        value="${escapeHtml(
+                            button.text
+                        )}"
+                    >
+
+                    <label>
+                        URL
+                    </label>
+
+                    <input
+                        id="${containerId}${index}u"
+                        value="${escapeHtml(
+                            button.url
+                        )}"
+                    >
+
+                </div>
+
+                `
+            );
+
+        }
+    );
+
+}
+
+
+function collectBasic(){
+
+    SETTINGS.welcome_enabled =
+        document.getElementById("we").checked;
+
+
+    SETTINGS.profile_photo_enabled =
+        document.getElementById("pp").checked;
+
+
+    SETTINGS.channel_title =
+        document.getElementById("ct").value;
+
+
+    SETTINGS.welcome_text =
+        document.getElementById("wt").value;
+
+
+    SETTINGS.welcome_text_size =
+        document.getElementById("ws").value;
+
+
+    SETTINGS.video_url =
+        document
+            .getElementById("vu")
+            .value
+            .trim();
+
+
+    SETTINGS.audio_url =
+        document
+            .getElementById("au")
+            .value
+            .trim();
+
+
+    SETTINGS.voice_text =
+        document.getElementById("vt").value;
+
+}
+
+
+function collectButtons(
+    containerId,
+    key,
+    count
+){
+
+    SETTINGS[key] = [];
+
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        SETTINGS[key].push({
+
+            enabled:
+                document
+                    .getElementById(
+                        containerId +
+                        i +
+                        "e"
+                    )
+                    .checked,
+
+            text:
+                document
+                    .getElementById(
+                        containerId +
+                        i +
+                        "t"
+                    )
+                    .value,
+
+            url:
+                document
+                    .getElementById(
+                        containerId +
+                        i +
+                        "u"
+                    )
+                    .value
+
+        });
+
+    }
+
+}
+
+
+async function saveSettings(
+    statusId="alls"
+){
+
+    try{
+
+        const data =
+            await apiRequest(
+                API.settings,
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            settings:SETTINGS
+                        })
+
+                }
+            );
+
+
+        normalizeSettings(
+            data.settings
+        );
+
+
+        loadSettingsIntoPanel();
+
+        preview();
+
+
+        const status =
+            document.getElementById(
+                statusId
+            );
+
+
+        status.textContent =
+            "✅ Saved successfully";
+
+
+        status.className =
+            "status ok";
+
+
+    }catch(error){
+
+        const status =
+            document.getElementById(
+                statusId
+            );
+
+
+        status.textContent =
+            "❌ " +
+            error.message;
+
+
+        status.className =
+            "status err";
+
+    }
+
+}
+
+
+async function saveBasic(){
+
+    collectBasic();
+
+    await saveSettings("bs");
+
+}
+
+
+async function saveButtons(){
+
+    collectBasic();
+
+    collectButtons(
+        "main",
+        "main_buttons",
+        3
+    );
+
+    await saveSettings("ms");
+
+}
+
+
+async function saveMediaButtons(){
+
+    collectBasic();
+
+    collectButtons(
+        "mediaButtons",
+        "video_buttons",
+        2
+    );
+
+    await saveSettings("mbs");
+
+}
+
+
+async function saveDuration(){
+
+    SETTINGS.duration =
+        Number(
+            document
+                .getElementById("dur")
+                .value
+        );
+
+
+    SETTINGS.duration_seconds =
+        SETTINGS.duration;
+
+
+    await saveSettings("ds");
+
+}
+
+
+async function saveAll(){
+
+    collectBasic();
+
+    collectButtons(
+        "main",
+        "main_buttons",
+        3
+    );
+
+    collectButtons(
+        "mediaButtons",
+        "video_buttons",
+        2
+    );
+
+
+    SETTINGS.duration =
+        Number(
+            document
+                .getElementById("dur")
+                .value
+        );
+
+
+    SETTINGS.duration_seconds =
+        SETTINGS.duration;
+
+
+    await saveSettings("alls");
+
+}
+
+
+/* ==========================================================
+UPLOAD
+========================================================== */
+
+async function upload(type){
+
+    const input =
+        document.getElementById(
+            type === "video"
+                ? "vf"
+                : "af"
+        );
+
+
+    const file =
+        input.files[0];
+
+
+    if(!file){
+
+        alert(
+            type === "video"
+                ? "Video select করুন"
+                : "Audio select করুন"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        file.size >
+        50 * 1024 * 1024
+    ){
+
+        alert(
+            "File 50 MB-এর বেশি হতে পারবে না"
+        );
+
+        return;
+
+    }
+
+
+    const form =
+        new FormData();
+
+
+    form.append(
+        "file",
+        file
+    );
+
+
+    form.append(
+        "media_type",
+        type
+    );
+
+
+    const status =
+        document.getElementById(
+            type === "video"
+                ? "vs"
+                : "as"
+        );
+
+
+    status.textContent =
+        "⏳ Telegram-এ upload হচ্ছে...";
+
+
+    status.className =
+        "status";
+
+
+    try{
+
+        const data =
+            await apiRequest(
+                API.upload,
+                {
+
+                    method:"POST",
+
+                    body:form
+
+                }
+            );
+
+
+        if(type === "video"){
+
+            SETTINGS.video_file_id =
+                data.file_id;
+
+            SETTINGS.video_filename =
+                data.filename;
+
+        }else{
+
+            SETTINGS.audio_file_id =
+                data.file_id;
+
+            SETTINGS.audio_filename =
+                data.filename;
+
+        }
+
+
+        /*
+         * IMPORTANT:
+         * Upload-এর পর সঙ্গে সঙ্গে settings save
+         */
+
+        const saved =
+            await apiRequest(
+                API.settings,
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            settings:SETTINGS
+                        })
+
+                }
+            );
+
+
+        normalizeSettings(
+            saved.settings
+        );
+
+
+        loadSettingsIntoPanel();
+
+        preview();
+
+
+        status.textContent =
+            "✅ Upload + Save সফল হয়েছে";
+
+
+        status.className =
+            "status ok";
+
+
+    }catch(error){
+
+        status.textContent =
+            "❌ " +
+            error.message;
+
+
+        status.className =
+            "status err";
+
+    }
+
+}
+
+
+/* ==========================================================
+REMOVE
+========================================================== */
+
+async function removeMedia(type){
+
+    try{
+
+        const data =
+            await apiRequest(
+                API.remove,
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            media_type:type
+                        })
+
+                }
+            );
+
+
+        normalizeSettings(
+            data.settings
+        );
+
+
+        loadSettingsIntoPanel();
+
+        preview();
+
+
+    }catch(error){
+
+        alert(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+RESET
+========================================================== */
+
+async function resetAll(){
+
+    if(
+        !confirm(
+            "সব settings reset করবেন?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        const data =
+            await apiRequest(
+                API.reset,
+                {
+                    method:"POST"
+                }
+            );
+
+
+        normalizeSettings(
+            data.settings
+        );
+
+
+        loadSettingsIntoPanel();
+
+        preview();
+
+
+        document
+            .getElementById("alls")
+            .textContent =
+                "✅ Reset complete";
+
+
+    }catch(error){
+
+        document
+            .getElementById("alls")
+            .textContent =
+                "❌ " +
+                error.message;
+
+    }
+
+}
+
+
+/* ==========================================================
+PASSWORD
+========================================================== */
+
+async function changePass(){
+
+    const oldPassword =
+        document
+            .getElementById("old")
+            .value;
+
+
+    const newPassword =
+        document
+            .getElementById("new")
+            .value;
+
+
+    const confirmPassword =
+        document
+            .getElementById("conf")
+            .value;
+
+
+    const status =
+        document
+            .getElementById("ps");
+
+
+    if(
+        newPassword !==
+        confirmPassword
+    ){
+
+        status.textContent =
+            "❌ Password মিলছে না";
+
+        status.className =
+            "status err";
+
+        return;
+
+    }
+
+
+    try{
+
+        await apiRequest(
+            API.password,
+            {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+
+                        old_password:
+                            oldPassword,
+
+                        new_password:
+                            newPassword
+
+                    })
+
+            }
+        );
+
+
+        PASSWORD =
+            newPassword;
+
+
+        status.textContent =
+            "✅ Password changed";
+
+
+        status.className =
+            "status ok";
+
+
+    }catch(error){
+
+        status.textContent =
+            "❌ " +
+            error.message;
+
+
+        status.className =
+            "status err";
+
+    }
+
+}
+
+
+/* ==========================================================
+PREVIEW
+========================================================== */
+
+function preview(){
+
+    collectBasic();
+
+
+    collectButtons(
+        "main",
+        "main_buttons",
+        3
+    );
+
+
+    collectButtons(
+        "mediaButtons",
+        "video_buttons",
+        2
+    );
+
+
+    const previewBox =
+        document.getElementById(
+            "previewBox"
+        );
+
+
+    previewBox.innerHTML = "";
+
+
+    let text =
+        String(
+            SETTINGS.welcome_text ||
+            ""
+        )
+        .replaceAll(
+            "{first_name}",
+            "Sohel User"
+        )
+        .replaceAll(
+            "{channel_title}",
+            SETTINGS.channel_title ||
+            ""
+        );
+
+
+    const textElement =
+        document.createElement(
+            "div"
+        );
+
+
+    textElement.textContent =
+        text;
+
+
+    previewBox.appendChild(
+        textElement
+    );
+
+
+    SETTINGS.main_buttons.forEach(
+        function(button){
+
+            if(
+                button.enabled &&
+                button.text &&
+                button.url
+            ){
+
+                previewBox.insertAdjacentHTML(
+                    "beforeend",
+
+                    `
+                    <a
+                        class="pb"
+                        href="${escapeHtml(button.url)}"
+                        target="_blank"
+                    >
+                        ${escapeHtml(button.text)}
+                    </a>
+                    `
+                );
+
+            }
+
+        }
+    );
+
+
+    if(
+        SETTINGS.video_file_id ||
+        SETTINGS.video_url
+    ){
+
+        previewBox.insertAdjacentHTML(
+            "beforeend",
+
+            `
+            <div class="media">
+                🎬 Video:
+                ${escapeHtml(
+                    SETTINGS.video_filename ||
+                    SETTINGS.video_url ||
+                    "Uploaded"
+                )}
+            </div>
+            `
+
+        );
+
+    }
+
+
+    if(
+        SETTINGS.audio_file_id ||
+        SETTINGS.audio_url
+    ){
+
+        previewBox.insertAdjacentHTML(
+            "beforeend",
+
+            `
+            <div class="media">
+                🎵 Audio:
+                ${escapeHtml(
+                    SETTINGS.audio_filename ||
+                    SETTINGS.audio_url ||
+                    "Uploaded"
+                )}
+            </div>
+            `
+
+        );
+
+    }
+
+
+    SETTINGS.video_buttons.forEach(
+        function(button){
+
+            if(
+                button.enabled &&
+                button.text &&
+                button.url
+            ){
+
+                previewBox.insertAdjacentHTML(
+                    "beforeend",
+
+                    `
+                    <a
+                        class="pb"
+                        href="${escapeHtml(button.url)}"
+                        target="_blank"
+                    >
+                        ${escapeHtml(button.text)}
+                    </a>
+                    `
+
+                );
+
+            }
+
+        }
+    );
+
+}
+
+</script>
+
+</body>
+</html>
