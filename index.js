@@ -394,10 +394,18 @@ async function sendWelcomeText(text, keyboard, parseMode = "HTML") {
 }
 
 async function sendWelcomePhoto(photo, caption, keyboard, parseMode = "HTML") {
-    const body = { chat_id: CHANNEL_ID, photo, caption, parse_mode: parseMode };
-    if (keyboard) body.reply_markup = keyboard;
+    if (caption) {
+        await telegram("sendMessage", {
+            chat_id: CHANNEL_ID,
+            text: caption,
+            parse_mode: parseMode,
+            reply_markup: keyboard
+        });
+    }
+    const body = { chat_id: CHANNEL_ID, photo };
     return telegram("sendPhoto", body);
 }
+
 
 async function sendWelcomeVideo(source, keyboard) {
     const body = { chat_id: CHANNEL_ID, video: source };
