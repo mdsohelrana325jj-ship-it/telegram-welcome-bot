@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="bn">
 
@@ -192,6 +191,13 @@ textarea{
     white-space:pre-wrap;
 }
 
+.preview video,
+.preview audio{
+    width:100%;
+    margin-top:8px;
+    border-radius:8px;
+}
+
 .pb{
     display:block;
     background:#7138f5;
@@ -243,7 +249,7 @@ LOGIN
 
 <div class="card">
 
-<h2>🔐 Admin Login</h2>
+<h2>ЁЯФС Admin Login</h2>
 
 <label>Password</label>
 
@@ -282,7 +288,7 @@ ADMIN APP
 <div class="card head">
 
 <h1>
-👑 SOHEL VAI ADMIN PANEL
+ЁЯСС SOHEL VAI ADMIN PANEL
 </h1>
 
 <p>
@@ -298,7 +304,7 @@ BASIC
 
 <div class="card">
 
-<h2>⚙️ Basic Welcome</h2>
+<h2>тЪЩя╕П Basic Welcome</h2>
 
 
 <div class="row">
@@ -378,16 +384,16 @@ Code Format (<pre>)
 </select>
 
 
-<label>Message Order (সিরিজ)</label>
+<label>Message Order (ржорзЗрж╕рзЗржЬ ржЕрж░рзНржбрж╛рж░)</label>
 
 <select id="mo">
 
 <option value="welcome_first">
-Welcome Message First (প্রথমে ওয়েলকাম, পরে মিডিয়া)
+Welcome Message First (ржУржпрж╝рзЗрж▓ржХрж╛ржо ржорзЗрж╕рзЗржЬ ржЖржЧрзЗ, ржорж┐ржбрж┐рзЯрж╛ ржкрж░рзЗ)
 </option>
 
 <option value="media_first">
-Media First (প্রথমে ভিডিও/অডিও, পরে ওয়েলকাম)
+Media First (ржорж┐ржбрж┐рзЯрж╛/ржЕржбрж┐ржУ ржЖржЧрзЗ, ржУрзЯрзЗрж▓ржХрж╛ржо ржорзЗрж╕рзЗржЬ ржкрж░рзЗ)
 </option>
 
 </select>
@@ -397,7 +403,7 @@ Media First (প্রথমে ভিডিও/অডিও, পরে ওয়�
     class="btn"
     onclick="saveBasic()"
 >
-💾 SAVE BASIC
+ЁЯТ╛ SAVE BASIC
 </button>
 
 <div
@@ -414,7 +420,7 @@ MAIN BUTTONS
 
 <div class="card">
 
-<h2>🔘 Main Buttons (3)</h2>
+<h2>ЁЯФЧ Main Buttons (3)</h2>
 
 <div id="main"></div>
 
@@ -422,7 +428,7 @@ MAIN BUTTONS
     class="btn"
     onclick="saveButtons()"
 >
-💾 SAVE MAIN BUTTONS
+ЁЯТ╛ SAVE MAIN BUTTONS
 </button>
 
 <div
@@ -439,7 +445,7 @@ VIDEO
 
 <div class="card">
 
-<h2>🎬 Welcome Video</h2>
+<h2>ЁЯОм Welcome Video</h2>
 
 <input
     id="vf"
@@ -451,7 +457,7 @@ VIDEO
     class="btn green"
     onclick="upload('video')"
 >
-📤 UPLOAD VIDEO
+ЁЯУд UPLOAD VIDEO
 </button>
 
 <div
@@ -476,10 +482,22 @@ Optional Video URL
 >
 
 <button
+    class="btn"
+    onclick="saveVideoUrl()"
+>
+ЁЯТ╛ Save Video URL тЬЕ
+</button>
+
+<div
+    id="vsu"
+    class="status"
+></div>
+
+<button
     class="btn red"
     onclick="removeMedia('video')"
 >
-🗑 REMOVE VIDEO
+ЁЯЧСя╕П REMOVE VIDEO
 </button>
 
 </div>
@@ -491,7 +509,7 @@ AUDIO
 
 <div class="card">
 
-<h2>🎵 Welcome Audio</h2>
+<h2>ЁЯО╡ Welcome Audio</h2>
 
 <input
     id="af"
@@ -503,7 +521,7 @@ AUDIO
     class="btn green"
     onclick="upload('audio')"
 >
-📤 UPLOAD AUDIO
+ЁЯУд UPLOAD AUDIO
 </button>
 
 <div
@@ -537,10 +555,22 @@ Audio Caption
 >
 
 <button
+    class="btn"
+    onclick="saveAudioUrl()"
+>
+ЁЯТ╛ Save Audio URL тЬЕ
+</button>
+
+<div
+    id="asu"
+    class="status"
+></div>
+
+<button
     class="btn red"
     onclick="removeMedia('audio')"
 >
-🗑 REMOVE AUDIO
+ЁЯЧСя╕П REMOVE AUDIO
 </button>
 
 </div>
@@ -552,7 +582,7 @@ MEDIA BUTTONS
 
 <div class="card">
 
-<h2>🔗 Media Buttons (2)</h2>
+<h2>ЁЯОЫя╕П Media Buttons (2)</h2>
 
 <div id="mediaButtons"></div>
 
@@ -560,7 +590,7 @@ MEDIA BUTTONS
     class="btn"
     onclick="saveMediaButtons()"
 >
-💾 SAVE MEDIA BUTTONS
+ЁЯТ╛ SAVE MEDIA BUTTONS
 </button>
 
 <div
@@ -570,13 +600,9 @@ MEDIA BUTTONS
 
 <div class="small">
 
-Video এবং Audio দুটো থাকলে
-এই ২টি button শেষের Audio message-এর
-নিচে থাকবে।
-
-শুধু Video থাকলে Video-এর নিচে থাকবে।
-
-শুধু Audio থাকলে Audio-এর নিচে থাকবে।
+Video ржПржмржВ Audio ржПржХрж╕рж╛ржерзЗ ржерж╛ржХрж▓рзЗ ржПржЗ buttonржЧрзБрж▓рзЛрж░ ржорж╛ржзрзНржпржорзЗ Audio message-ржПрж░ ржирж┐ржЪрзЗ ржмрж╛ржЯржи ржпрзБржХрзНржд рж╣ржмрзЗред<br>
+рж╢рзБржзрзБржорж╛рждрзНрж░ Video ржерж╛ржХрж▓рзЗ Video-рж░ ржирж┐ржЪрзЗ ржмрж╛ржЯржи ржпрзБржХрзНржд рж╣ржмрзЗред<br>
+рж╢рзБржзрзБржорж╛рждрзНрж░ Audio ржерж╛ржХрж▓рзЗ Audio-рж░ ржирж┐ржЪрзЗ ржмрж╛ржЯржи ржпрзБржХрзНржд рж╣ржмрзЗред
 
 </div>
 
@@ -589,7 +615,7 @@ AUTO DELETE
 
 <div class="card">
 
-<h2>⏱ Auto Delete</h2>
+<h2>тП│ Auto Delete</h2>
 
 <select id="dur">
 
@@ -623,7 +649,7 @@ AUTO DELETE
     class="btn"
     onclick="saveDuration()"
 >
-💾 SAVE DELETE TIME
+ЁЯТ╛ SAVE DELETE TIME
 </button>
 
 <div
@@ -640,7 +666,7 @@ PREVIEW
 
 <div class="card">
 
-<h2>👁️ System Preview</h2>
+<h2>ЁЯСБя╕ПтАНЁЯЧия╕П System Preview</h2>
 
 <div
     id="previewBox"
@@ -651,7 +677,7 @@ PREVIEW
     class="btn dark"
     onclick="preview()"
 >
-🔄 REFRESH PREVIEW
+ЁЯФД REFRESH PREVIEW
 </button>
 
 </div>
@@ -663,20 +689,20 @@ SAVE ALL
 
 <div class="card">
 
-<h2>💾 Complete System</h2>
+<h2>ЁЯТ╛ Complete System</h2>
 
 <button
     class="btn"
     onclick="saveAll()"
 >
-💾 ALL WELCOME SYSTEM SAVE
+ЁЯТ╛ ALL WELCOME SYSTEM SAVE
 </button>
 
 <button
     class="btn red"
     onclick="resetAll()"
 >
-🚫 RESET ALL
+тЪая╕П RESET ALL
 </button>
 
 <div
@@ -693,7 +719,7 @@ PASSWORD
 
 <div class="card">
 
-<h2>🔐 Change Password</h2>
+<h2>ЁЯФС Change Password</h2>
 
 <input
     id="old"
@@ -717,7 +743,7 @@ PASSWORD
     class="btn dark"
     onclick="changePass()"
 >
-🔐 CHANGE PASSWORD
+ЁЯФС CHANGE PASSWORD
 </button>
 
 <div
@@ -765,18 +791,19 @@ const DEFAULT_SETTINGS = {
         "SOHEL VAI OFFICIAL CHANNEL",
 
     welcome_text:
-`👋 👤 {first_name} ⸙ 🇧🇩
+`ЁЯСЛ ЁЯСд {first_name} ржУрзЯрж╛ ЁЯЗзЁЯЗй
 
-🎉 আপনাকে স্বাগতম!
-👑 SOHEL VAI OFFICIAL CHANNEL JOIN করার জন্য 💖
+ЁЯОЙ ржЖржкржирж╛ржХрзЗ рж╕рзНржмрж╛ржЧрждржо!
+ЁЯСС SOHEL VAI OFFICIAL CHANNEL JOIN ржХрж░рж╛рж░ ржЬржирзНржп ЁЯТЮ
 
-❤️ আসসালামু আলাইকুম প্রিয় ভাই ❤
-আমাদের Official Channel-এ Join করার জন্য আপনাকে আন্তরিক ধন্যবাদ।
+тЭдя╕П ржЖрж╕рж╕рж╛рж▓рж╛ржорзБ ржЖрж▓рж╛ржЗржХрзБржо ржкрзНрж░рж┐рзЯ ржнрж╛ржЗ тЭдя╕П
+ржЖржорж╛ржжрзЗрж░ Official Channel-ржП Join ржХрж░рж╛рж░ ржЬржирзНржп ржЖржкржирж╛ржХрзЗ ржЖржирзНрждрж░рж┐ржХ ржзржирзНржпржмрж╛ржжред
 
-প্রিয় ভাই আমাদের সাথেই থাকুন আশা করি কোন না কোন একদিন অবশ্যই আপনার উপকারে আসবোই ইনশাআল্লাহ 🥰
+ржкрзНрж░рж┐рзЯ ржнрж╛ржЗ ржЖржорж╛ржжрзЗрж░ рж╕рж╛ржерзЗржЗ ржерж╛ржХрзБржи ржЖрж╢рж╛ ржХрж░рж┐ ржХрзЛржи ржирж╛ ржХрзЛржи ржПржХржжрж┐ржи ржЕржмрж╢рзНржпржЗ ржЖржкржирж╛рж░ ржЙржкржХрж╛рж░рзЗ ржЖрж╕ржмрзЛржЗ ржЗржирж╢рж╛ржЖрж▓рзНрж▓рж╛рж╣ ЁЯе░
 
-📢 নিয়মিত নতুন Update পেতে আমাদের সাথে থাকুন।🫶😘
-👑 — SOHEL VAI — 👑`,
+ЁЯУЮ ржирж┐рзЯржорж┐ржд ржирждрзБржи Update ржкрзЗрждрзЗ ржЖржорж╛ржжрзЗрж░ рж╕рж╛ржерзЗржЗ ржерж╛ржХрзБржиред
+ЁЯдЭЁЯШШ
+ЁЯСС тАУ SOHEL VAI тАУ ЁЯСС`,
 
     welcome_text_size:"bold",
 
@@ -797,17 +824,17 @@ const DEFAULT_SETTINGS = {
     audio_url:"",
 
     voice_text:
-        "🎶 গুরুত্বপূর্ণ ভয়েস শুনুন 🎵🎵",
+        "ЁЯО╡ ржЧрзБрж░рзБрждрзНржмржкрзВрж░рзНржг ржнрзЯрзЗрж╕ рж╢рзБржирзБржи ЁЯО╡ЁЯО╡",
 
     voice_button_text:
-        "🎶🎶 𝗢𝗣𝗘𝗡 𝗩𝗢𝗜𝗖𝗘 🎵🎵",
+        "ЁЯО╡ЁЯО╡ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО╡ЁЯО╡",
 
     main_buttons:[
 
         {
             enabled:true,
             text:
-                "👑 𝗩𝗜𝗣 𝗚𝗥𝗢𝗨𝗣 𝗙𝗔𝗦𝗧 𝗝𝗢𝗜𝗡 👑",
+                "ЁЯСС ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯСС",
             url:
                 "https://t.me/+WZR7nsATt1szNmRh"
         },
@@ -815,7 +842,7 @@ const DEFAULT_SETTINGS = {
         {
             enabled:true,
             text:
-                "😈 𝗔𝗜 HACK 𝐋𝐈𝐍𝐊 𝐎𝐏𝐄𝐍 😈",
+                "ЁЯШИ ЁЯО┤ЁЯО┤ HACK ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯШИ",
             url:
                 "https://t.me/sohel_ai_prediction_bot"
         },
@@ -823,7 +850,7 @@ const DEFAULT_SETTINGS = {
         {
             enabled:true,
             text:
-                "💬 𝗦𝗨𝗣𝗣𝗢𝗥𝗧 𝗔𝗗𝗠𝗜𝗡 ☎️",
+                "ЁЯОБ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯПЖЁЯСБя╕ПтАНЁЯЧия╕П",
             url:
                 "https://t.me/TRADER_SOHEL_BDT_TOP"
         }
@@ -835,7 +862,7 @@ const DEFAULT_SETTINGS = {
         {
             enabled:true,
             text:
-                "🔵 𝗕𝗗𝗪𝗜𝗡𝟮𝟰 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗝𝗢𝗜𝗡🎰",
+                "ЁЯО╡ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤",
             url:
                 "https://t.me/+gNZZwOIN72BjYzQ1"
         },
@@ -843,7 +870,7 @@ const DEFAULT_SETTINGS = {
         {
             enabled:true,
             text:
-                "🟡 𝐃𝐊𝐖𝐈𝗡 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗝𝗎𝗈𝗜𝗡🎰",
+                "ЁЯЫНя╕П ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤ЁЯО┤",
             url:
                 "https://t.me/EARNING_TEME_bd"
         }
@@ -1016,7 +1043,7 @@ async function doLogin(){
         document
             .getElementById("le")
             .textContent =
-                "❌ Password দিন";
+                "тЭМ Password ржжрж┐ржи";
 
         return;
 
@@ -1091,7 +1118,7 @@ async function doLogin(){
         document
             .getElementById("le")
             .textContent =
-                "❌ " +
+                "тЭМ " +
                 error.message;
 
     }
@@ -1418,7 +1445,7 @@ async function saveSettings(
 
 
         status.textContent =
-            "✅ Saved successfully";
+            "тЬЕ Saved successfully";
 
 
         status.className =
@@ -1434,7 +1461,7 @@ async function saveSettings(
 
 
         status.textContent =
-            "❌ " +
+            "тЭМ " +
             error.message;
 
 
@@ -1504,6 +1531,24 @@ async function saveDuration(){
 }
 
 
+async function saveVideoUrl(){
+
+    collectBasic();
+
+    await saveSettings("vsu");
+
+}
+
+
+async function saveAudioUrl(){
+
+    collectBasic();
+
+    await saveSettings("asu");
+
+}
+
+
 async function saveAll(){
 
     collectBasic();
@@ -1560,8 +1605,8 @@ async function upload(type){
 
         alert(
             type === "video"
-                ? "Video select করুন"
-                : "Audio select করুন"
+                ? "Video select ржХрж░рзБржи"
+                : "Audio select ржХрж░рзБржи"
         );
 
         return;
@@ -1575,7 +1620,7 @@ async function upload(type){
     ){
 
         alert(
-            "File 50 MB-এর বেশি হতে পারবে না"
+            "File 50 MB-ржПрж░ ржмрзЗрж╢рж┐ ржмрзЬ рж╣рждрзЗ ржкрж╛рж░ржмрзЗ ржирж╛"
         );
 
         return;
@@ -1608,7 +1653,7 @@ async function upload(type){
 
 
     status.textContent =
-        "⏳ Telegram-এ upload হচ্ছে...";
+        "тП│ Telegram-ржП upload рж╣ржЗрждрзЗржЫрзЗ...";
 
 
     status.className =
@@ -1696,7 +1741,7 @@ async function upload(type){
 
 
         status.textContent =
-            "✅ Upload + Save সফল হয়েছে";
+            "тЬЕ Upload + Save рж╕ржлрж▓ рж╣ржЗрж▓рзЛ";
 
 
         status.className =
@@ -1706,7 +1751,7 @@ async function upload(type){
     }catch(error){
 
         status.textContent =
-            "❌ " +
+            "тЭМ " +
             error.message;
 
 
@@ -1776,7 +1821,7 @@ async function resetAll(){
 
     if(
         !confirm(
-            "সব settings reset করবেন?"
+            "рж╕ржм settings reset ржХрж░ржмрзЗржи?"
         )
     ){
 
@@ -1809,7 +1854,7 @@ async function resetAll(){
         document
             .getElementById("alls")
             .textContent =
-                "✅ Reset complete";
+                "тЬЕ Reset complete";
 
 
     }catch(error){
@@ -1817,7 +1862,7 @@ async function resetAll(){
         document
             .getElementById("alls")
             .textContent =
-                "❌ " +
+                "тЭМ " +
                 error.message;
 
     }
@@ -1860,7 +1905,7 @@ async function changePass(){
     ){
 
         status.textContent =
-            "❌ Password মিলছে না";
+            "тЭМ Password ржорж┐рж▓ржЫрзЗ ржирж╛";
 
         status.className =
             "status err";
@@ -1903,7 +1948,7 @@ async function changePass(){
 
 
         status.textContent =
-            "✅ Password changed";
+            "тЬЕ Password changed";
 
 
         status.className =
@@ -1913,7 +1958,7 @@ async function changePass(){
     }catch(error){
 
         status.textContent =
-            "❌ " +
+            "тЭМ " +
             error.message;
 
 
@@ -2017,49 +2062,41 @@ function preview(){
     );
 
 
-    if(
-        SETTINGS.video_file_id ||
-        SETTINGS.video_url
-    ){
+    const videoSrc =
+        SETTINGS.video_url ||
+        (SETTINGS.video_file_id ? "Uploaded Video" : "");
+
+    if(videoSrc){
 
         previewBox.insertAdjacentHTML(
             "beforeend",
 
             `
             <div class="media">
-                🎬 Video:
-                ${escapeHtml(
-                    SETTINGS.video_filename ||
-                    SETTINGS.video_url ||
-                    "Uploaded"
-                )}
+                ЁЯОм Video Preview:
+                <video controls src="${escapeHtml(SETTINGS.video_url || '')}"></video>
             </div>
             `
-
         );
 
     }
 
 
-    if(
-        SETTINGS.audio_file_id ||
-        SETTINGS.audio_url
-    ){
+    const audioSrc =
+        SETTINGS.audio_url ||
+        (SETTINGS.audio_file_id ? "Uploaded Audio" : "");
+
+    if(audioSrc){
 
         previewBox.insertAdjacentHTML(
             "beforeend",
 
             `
             <div class="media">
-                🎵 Audio:
-                ${escapeHtml(
-                    SETTINGS.audio_filename ||
-                    SETTINGS.audio_url ||
-                    "Uploaded"
-                )}
+                ЁЯО╡ Audio Preview:
+                <audio controls src="${escapeHtml(SETTINGS.audio_url || '')}"></audio>
             </div>
             `
-
         );
 
     }
