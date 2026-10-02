@@ -22,7 +22,10 @@ if (!BOT_TOKEN) {
 ========================================================= */
 
 const app = express();
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "10mb" }));
+
+// স্ট্যাটিক ফোল্ডার হিসেবে public ফোল্ডার যুক্ত করা যাতে admin.html সরাসরি লোড হয়
+app.use(express.static(path.join(__dirname, "public")));
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -48,22 +51,24 @@ if (!fs.existsSync(DATA_DIR)) {
 const DEFAULT_SETTINGS = {
     welcome_enabled: true,
     profile_photo_enabled: true,
-    message_order: "welcome_first", // "welcome_first" অথবা "media_first"
+    message_order: "welcome_first", 
     channel_title: "SOHEL VAI OFFICIAL CHANNEL",
-    welcome_text: `👋 👤 {first_name} ⸙ 🇧🇩
+    welcome_text: `🎉 স্বাগতম {first_name} 👋 জয়েন 
 
-🎉 আপনাকে স্বাগতম!
-👑 SOHEL VAI OFFICIAL CHANNEL JOIN করার জন্য 💖
+প্রিয় সাবস্ক্রাইবার বন্ধু!
+SOHEL VAI OFFICIAL CHANNEL JOIN করার জন্য ধন্যবাদ 🎁
 
-❤️ আসসালামু আলাইকুম প্রিয় ভাই ❤️
-আমাদের Official Channel-এ Join করার জন্য আপনাকে আন্তরিক ধন্যবাদ।
+⚠️⚠️ গুরুত্বপূর্ণ নির্দেশিকা ⚠️⚠️
+আমাদের Official Channel-এ Join করার জন্য আপনাকে আন্তরিক অভিনন্দন🎉
 
-প্রিয় ভাই আমাদের সাথেই থাকুন আশা করি কোন না কোন একদিন অবশ্যই আপনার উপকারে আসবোই ইনশাআল্লাহ 🥰
+প্রথমে গুরুত্বপূর্ণ আমাদের এই সাবস্ক্রাইবার প্রোফাইলটি পিন বা অন করে পিন্ট করে রাখুন 📌
 
-📢 নিয়মিত নতুন Update পেতে আমাদের সাথে থাকুন।🫶😘
-👑 — SOHEL VAI — 👑`,
+📩 নিশ্চিত করুন আপনার এই আমাদের এই সাবস্ক্রাইবার প্রোফাইলটি পিনচোটার্ড যেন পাইপলাইনে না যায় পরবর্তীতে আপনার অ্যাকাউন্ট ইনফরমেশন সুরক্ষিত রাখতে সাহায্য করবে 🚀
 
-    welcome_text_size: "bold", // "normal", "bold", "code"
+ভুল করবেন না আমাদের এই চ্যানেলে প্রবেশ করে 
+⭐ 👇 SOHEL VAI 👇 ⭐`,
+
+    welcome_text_size: "bold", 
     duration: 30,
     duration_seconds: 30,
     video_file_id: "",
@@ -72,18 +77,18 @@ const DEFAULT_SETTINGS = {
     audio_file_id: "",
     audio_filename: "",
     audio_url: "",
-    voice_text: "🎶 গুরুত্বপূর্ণ ভয়েস শুনুন 🎵🎵",
-    voice_button_text: "🎶🎶 𝗢𝗣𝗘𝗡 𝗩𝗢𝗜𝗖𝗘 🎵🎵",
+    voice_text: "🔊 বিশেষ গুরুত্বপূর্ণ ভয়েস বার্তা 🔊ওডিও",
+    voice_button_text: "🔊🔊 বিশেষ ভয়েস বার্তা ওডিও বার্তা 🔊ওডিও",
 
     main_buttons: [
-        { enabled: true, text: "👑 𝗩𝗜𝗣 𝗚𝗥𝗢𝗨𝗣 𝗙𝗔𝗦𝗧 𝗝𝗢𝗜𝗡 👑", url: "https://t.me/+WZR7nsATt1szNmRh" },
-        { enabled: true, text: "😈 𝗔𝗜 HACK 𝐋𝐈𝐍𝐊 𝐎𝐏𝐄𝐍 😈", url: "https://t.me/sohel_ai_prediction_bot" },
-        { enabled: true, text: "💬 𝗦𝗨𝗣𝗣𝗢𝗥𝗧 𝗔𝗗𝗠𝗜𝗡 ☎️", url: "https://t.me/TRADER_SOHEL_BDT_TOP" }
+        { enabled: true, text: "⭐ বিশেষ চ্যানেল লিংক ⭐", url: "https://t.me/+WZR7nsATt1szNmRh" },
+        { enabled: true, text: "🔥 VIP HACK প্রিডিকশন চ্যানেল 🔥", url: "https://t.me/sohel_ai_prediction_bot" },
+        { enabled: true, text: "🎯 ট্রেডিং চ্যানেলম টেলিগ্রাম সাপোর্ট 👑🎁", url: "https://t.me/TRADER_SOHEL_BDT_TOP" }
     ],
 
     video_buttons: [
-        { enabled: true, text: "🔵 𝗕𝗗𝗪𝗜𝗡𝟮𝟰 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗝𝗢𝗜𝗡🎰", url: "https://t.me/+gNZZwOIN72BjYzQ1" },
-        { enabled: true, text: "🟡 𝐃𝐊𝐖𝐈𝐍 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗧𝗡𝗘𝗟 𝗝𝗎𝗈𝗜𝗡🎰", url: "https://t.me/EARNING_TEME_bd" }
+        { enabled: true, text: "⭐ স্পেশাল চ্যানেল সাবস্ক্রাইব লিংক ⭐", url: "https://t.me/+gNZZwOIN72BjYzQ1" },
+        { enabled: true, text: "📌 পিন টেলিগ্রাম চ্যানেল সাবস্ক্রাইবার", url: "https://t.me/EARNING_TEME_bd" }
     ]
 };
 
@@ -229,7 +234,12 @@ app.get("/api/settings", checkAdmin, function(req, res) {
 app.post("/api/settings", checkAdmin, function(req, res) {
     try {
         const incoming = req.body && req.body.settings ? req.body.settings : req.body;
-        const settings = saveSettings(incoming);
+        const current = loadSettings();
+        
+        // মার্জ করার সময় যেন আগের ফাইল আইডি বা URL মুছে না যায়
+        const merged = { ...current, ...incoming };
+        const settings = saveSettings(merged);
+        
         res.json({ ok: true, settings });
     } catch (error) {
         res.status(500).json({ ok: false, error: error.message });
@@ -237,12 +247,12 @@ app.post("/api/settings", checkAdmin, function(req, res) {
 });
 
 /* =========================================================
-   MEDIA UPLOAD API
+   MEDIA UPLOAD API (Separate for Video & Audio)
 ========================================================= */
 
 app.post("/api/upload", checkAdmin, upload.single("file"), async function(req, res) {
     try {
-        if (!req.file) return res.status(400).json({ ok: false, error: "File select করুন" });
+        if (!req.file) return res.status(400).json({ ok: false, error: "ফাইল সিলেক্ট করুন" });
         const type = String(req.body.media_type || "").toLowerCase();
         if (type !== "video" && type !== "audio") {
             return res.status(400).json({ ok: false, error: "Invalid media type" });
@@ -305,29 +315,29 @@ app.post("/api/change-password", checkAdmin, function(req, res) {
     const oldPassword = String(req.body.old_password || "");
     const newPassword = String(req.body.new_password || "");
     if (oldPassword !== loadPassword()) {
-        return res.status(401).json({ ok: false, error: "Current password ভুল" });
+        return res.status(401).json({ ok: false, error: "বর্তমান পাসওয়ার্ড ভুল" });
     }
     if (newPassword.length < 4) {
-        return res.status(400).json({ ok: false, error: "New password কমপক্ষে 4 characters" });
+        return res.status(400).json({ ok: false, error: "নতুন পাসওয়ার্ড কমপক্ষে ৪ অক্ষর হতে হবে" });
     }
     savePassword(newPassword);
-    res.json({ ok: true, message: "Password changed" });
+    res.json({ ok: true, message: "Password changed successfully" });
 });
 
 /* =========================================================
-   ADMIN HTML
+   ADMIN HTML ROUTE
 ========================================================= */
 
 const ADMIN_HTML = path.join(__dirname, "public", "admin.html");
 
-app.get("/", function(req, res) {
-    if (fs.existsSync(ADMIN_HTML)) return res.sendFile(ADMIN_HTML);
-    res.send("admin.html not found");
+app.get("/", function(res, resObj) {
+    if (fs.existsSync(ADMIN_HTML)) return resObj.sendFile(ADMIN_HTML);
+    resObj.send("admin.html not found in public folder");
 });
 
-app.get("/admin", function(req, res) {
-    if (fs.existsSync(ADMIN_HTML)) return res.sendFile(ADMIN_HTML);
-    res.send("admin.html not found");
+app.get("/admin", function(req, resObj) {
+    if (fs.existsSync(ADMIN_HTML)) return resObj.sendFile(ADMIN_HTML);
+    resObj.send("admin.html not found in public folder");
 });
 
 /* =========================================================
@@ -454,7 +464,6 @@ async function sendWelcome(user) {
     const photoId = settings.profile_photo_enabled ? await getProfilePhotoFileId(userId) : null;
 
     try {
-        // ১. যদি এডমিন প্যানেল থেকে media_first সিলেক্ট করা থাকে
         if (settings.message_order === "media_first") {
             if (videoSource) {
                 const vMsg = await sendWelcomeVideo(videoSource, mediaButtons);
@@ -471,14 +480,12 @@ async function sendWelcome(user) {
                 welcomeMsg = await sendWelcomeText(text, mainButtons);
             }
             if (welcomeMsg) sent.push(welcomeMsg);
-        } 
-        // ২. ডিফল্ট বা welcome_first (প্রথমে ওয়েলকাম মেসেজ, পরে ভিডিও/অডিও)
-        else {
+        } else {
             let welcomeMsg = null;
             if (photoId) {
                 welcomeMsg = await sendWelcomePhoto(photoId, text, mainButtons);
             } else {
-                welcomeMsg = await sendWelcomeText(text, mainButtons);
+                welcomeMsg = await sendWelcomeText(text, mainById = mainButtons);
             }
             if (welcomeMsg) sent.push(welcomeMsg);
 
@@ -499,25 +506,25 @@ async function sendWelcome(user) {
 }
 
 /* =========================================================
-   WELCOME TEST
+   WELCOME TEST ROUTE
 ========================================================= */
 
 app.get("/welcome_test", checkAdmin, async function(req, res) {
     try {
         const userId = Number(req.query.user_id || "");
         if (!userId) {
-            return res.status(400).json({ ok: false, error: "user_id দিন" });
+            return res.status(400).json({ ok: `user_id দিন` });
         }
         const user = { id: userId, first_name: "Test User" };
         await sendWelcome(user);
-        res.json({ ok: true, message: "Welcome test sent" });
+        res.json({ ok: true, message: "Welcome test sent successfully" });
     } catch (error) {
         res.status(500).json({ ok: false, error: error.message });
     }
 });
 
 /* =========================================================
-   HEALTH
+   HEALTH CHECK
 ========================================================= */
 
 app.get("/health", function(req, res) {
